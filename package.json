@@ -6,14 +6,15 @@
   "scripts": {
     "build": "npx tsc",
     "docker:compose": "docker-compose up -d",
-    "dev": "concurrently \"npm:docker:compose\" \"wait-on tcp:6379 && nodemon src/index.ts\""
+    "dev": "concurrently \"npm:docker:compose\" \"wait-on tcp:6379 && nodemon\""
   },
   "author": "Sharjeel Humayun",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-validation": "^4.1.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

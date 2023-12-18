@@ -10,7 +10,7 @@ export default class PollController {
         this.pollService = new PollService();
     }
 
-    createPoll (req: Request<{}, {}, CreatePollFields>, res: Response<CreatePollServiceFields>) {
+    createPoll = (req: Request<{}, {}, CreatePollFields>, res: Response<CreatePollServiceFields>) => {
         const fields = req.body;
         const result = this.pollService.createPoll(fields);
 
@@ -18,7 +18,7 @@ export default class PollController {
         
     };
 
-    joinPoll (req: Request<{}, {}, JoinPollFields>, res: Response<JoinPollServiceFields>) {
+    joinPoll = (req: Request<{}, {}, JoinPollFields>, res: Response<JoinPollServiceFields>) => {
         const fields = req.body;
         const result = this.pollService.joinPoll(fields);
 
@@ -37,19 +37,3 @@ export default class PollController {
 
 
 }
-
-// export const createPoll = (req: Request<{}, {}, CreatePollData>, res: Response<CreatePollData>) => {
-//     const data: CreatePollData = req.body;
-//     console.log("hit post create");
-//     return res.status(201).json(data);
-// };
-
-// export const joinPoll = (req: Request<{}, {}, JoinPollData>, res: Response<JoinPollData>) => {
-//     const data: JoinPollData = req.body;
-//     console.log("hit join")
-//     return res.status(201).json(data);
-// };
-
-// export const rejoinPoll = (_: Request, res: Response) => {
-//     return res.status(201).json('hit rejoin');
-// };

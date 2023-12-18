@@ -1,5 +1,4 @@
 import { Router } from 'express';
-// import { createPoll, joinPoll, rejoinPoll } from './poll.controller';
 import PollController from './poll.controller';
 import { validate } from 'express-validation';
 import { validateCreatePoll, validateJoinPoll } from './poll.middleware';

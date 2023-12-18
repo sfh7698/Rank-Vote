@@ -7,7 +7,7 @@ import {
     JoinPollServiceFields } from "./poll.types";
 
 export default class PollService {
-    createPoll(fields: CreatePollFields): CreatePollServiceFields {
+    createPoll = (fields: CreatePollFields): CreatePollServiceFields => {
         const pollID = createPollID();
         const userID = createUserID();
 
@@ -18,7 +18,7 @@ export default class PollService {
         };      
     };
 
-    joinPoll(fields: JoinPollFields): JoinPollServiceFields {
+    joinPoll = (fields: JoinPollFields): JoinPollServiceFields => {
         const userID = createUserID();
 
         return {
@@ -27,7 +27,7 @@ export default class PollService {
         };
     };
 
-    rejoinPoll(fields: RejoinPollFields) {
+    rejoinPoll = (fields: RejoinPollFields) => {
         return fields;
     }
 }

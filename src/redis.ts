@@ -9,7 +9,7 @@ const connectionOptions: RedisOptions = {
 const redisClient: Redis = new IORedis(connectionOptions);
 
 redisClient.on('connect', () => {
-    console.log('Connected to Redis');
+    console.log(`Connected to Redis on ${redisClient.options.host}:${redisClient.options.port}`);
 });
   
 redisClient.on('error', (err) => {

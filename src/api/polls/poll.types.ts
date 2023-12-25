@@ -1,20 +1,41 @@
+//service types
 export type CreatePollFields = {
-    topic: String,
-    votesPerVoter: Number,
-    name: String
+    topic: string,
+    votesPerVoter: number,
+    name: string
 }
 
 export type JoinPollFields = {
-    pollID: String,
-    name:String
+    pollID: string,
+    name: string
 }
 
-export type RejoinPollFields = {
-    pollID: String,
-    userID: String,
-    name: String
+export type RejoinPollFields = JoinPollFields & { userID: string };
+
+export type PollServiceFields = { 
+    poll: Object,
+    // accessToken: string
+};
+
+// export type JoinPollServiceFields = CreatePollServiceFields
+
+export interface Participants {
+    [particpantID: string]: string
 }
 
-export type CreatePollServiceFields = CreatePollFields & {userID: String, pollID: String}
+export interface Poll {
+    id: string;
+    topic: string;
+    votesPerVoter: number,
+    participants: Participants;
+    adminID: string;
+    // nominations: Nominations;
+    // rankings; Rankings
+    // results: Results;
+    // hasStarted: boolean;
+}
 
-export type JoinPollServiceFields = JoinPollFields & {userID: String}
+// repository types
+export type CreatePollData = Pick<CreatePollFields, 'topic' | "votesPerVoter"> & {pollID: string, userID: string};
+
+export type AddParticipantData = RejoinPollFields;

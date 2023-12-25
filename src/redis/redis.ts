@@ -1,5 +1,6 @@
 import IORedis, { Redis, RedisOptions } from 'ioredis';
 import { config } from './config';
+import { errorLogger, generalLogger } from '../utils/loggers';
 
 const connectionOptions: RedisOptions = {
     host: config.redisHost,
@@ -9,15 +10,15 @@ const connectionOptions: RedisOptions = {
 const redisClient: Redis = new IORedis(connectionOptions);
 
 redisClient.on('connect', () => {
-    console.log(`Connected to Redis on ${redisClient.options.host}:${redisClient.options.port}`);
+    generalLogger.info(`Connected to Redis on ${redisClient.options.host}:${redisClient.options.port}`);
 });
   
 redisClient.on('error', (err) => {
-console.error('Redis connection error:', err);
+    errorLogger.error('Redis connection error:', err);
 });
 
-redisClient.on('ready', () => {
-console.log('Redis client is ready');
-});
+// redisClient.on('ready', () => {
+//     generalLogger.info('Redis client is ready');
+// });
 
 export default redisClient;

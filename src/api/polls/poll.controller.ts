@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreatePollFields, JoinPollFields, CreatePollServiceFields, JoinPollServiceFields } from './poll.types';
+import { CreatePollFields, JoinPollFields, PollServiceFields } from './poll.types';
 import PollService from './poll.service';
 
 export default class PollController {
@@ -10,17 +10,17 @@ export default class PollController {
         this.pollService = new PollService();
     }
 
-    createPoll = (req: Request<{}, {}, CreatePollFields>, res: Response<CreatePollServiceFields>) => {
+    createPoll = async (req: Request<{}, {}, CreatePollFields>, res: Response<PollServiceFields>) => {
         const fields = req.body;
-        const result = this.pollService.createPoll(fields);
+        const result = await this.pollService.createPoll(fields);
 
         res.status(201).json(result);
         
     };
 
-    joinPoll = (req: Request<{}, {}, JoinPollFields>, res: Response<JoinPollServiceFields>) => {
+    joinPoll = async (req: Request<{}, {}, JoinPollFields>, res: Response<PollServiceFields>) => {
         const fields = req.body;
-        const result = this.pollService.joinPoll(fields);
+        const result = await this.pollService.joinPoll(fields);
 
         res.status(201).json(result);
     };

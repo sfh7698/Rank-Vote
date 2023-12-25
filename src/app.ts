@@ -3,8 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import fs from 'fs';
-import api from './api';
 import { filename } from './utils/loggers';
+import api from './api';
 import { globalErrorhandler } from './error';
 
 dotenv.config();

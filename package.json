@@ -11,12 +11,15 @@
   "author": "Sharjeel Humayun",
   "license": "ISC",
   "dependencies": {
+    "@types/morgan": "^1.9.9",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-validation": "^4.1.0",
     "ioredis": "^5.3.2",
-    "nanoid": "^5.0.4"
+    "morgan": "^1.10.0",
+    "nanoid": "^5.0.4",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

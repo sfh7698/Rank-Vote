@@ -7,6 +7,7 @@ import {
     Poll} from "./poll.types";
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
+import generateToken  from "../../utils/generateToken"
 
 export default class PollService {
     private readonly pollRepository: PollsRepository;
@@ -22,10 +23,13 @@ export default class PollService {
         const createdPoll = await this.pollRepository.createPoll({...fields, pollID, userID});
 
         // TODO - create an accessToken based off of pollID and userID
+        generalLogger.debug( `Creating token string for pollID: ${createdPoll.id} and userID: ${userID}`);
+
+        const signedString = generateToken(userID, createdPoll.id, fields.name);
 
         return {
             poll: createdPoll,
-            // access token
+            accessToken: signedString
         };
     };
 
@@ -37,10 +41,13 @@ export default class PollService {
         const joinedPoll = await this.pollRepository.getPoll(fields.pollID);
 
         // TODO - create access Token
+        generalLogger.debug(`Creating token string for pollID: ${joinedPoll.id} and userID: ${userID}`);
+
+        const signedString = generateToken(userID, joinedPoll.id, fields.name);
 
         return {
             poll: joinedPoll,
-            // accessToken: signedString
+            accessToken: signedString
         }
     };
 

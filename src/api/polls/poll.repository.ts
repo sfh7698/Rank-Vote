@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import redisClient from '../../redis/redis';
 import { errorLogger, generalLogger } from '../../utils/loggers';
 import { AddParticipantData, CreatePollData, Poll } from './poll.types';
-
-dotenv.config();
 
 export default class PollsRepository {
     private readonly ttl = process.env.POLL_DURATION;

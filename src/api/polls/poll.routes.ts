@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import PollController from './poll.controller';
 import { validate } from 'express-validation';
-import { validateCreatePoll, validateJoinPoll } from './poll.middleware';
+import { authRejoin, validateCreatePoll, validateJoinPoll } from './poll.middleware';
 
 const router: Router = Router();
 
@@ -11,6 +11,6 @@ router.post('/', validate(validateCreatePoll, {keyByField: true}), pollControlle
 
 router.post('/join', validate(validateJoinPoll, {keyByField: true}), pollController.joinPoll);
 
-router.post('/rejoin', pollController.rejoinPoll)
+router.post('/rejoin', authRejoin, pollController.rejoinPoll)
 
 export default router;

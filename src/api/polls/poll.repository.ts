@@ -63,7 +63,7 @@ export default class PollsRepository {
 
             const poll = await this.getPoll(pollID);
 
-            generalLogger.debug( `Current Participants for pollID: ${pollID}: ${poll.participants}`);
+            generalLogger.info( `Current Participants for pollID: ${pollID}: ${poll.participants}`);
 
             return poll;
 

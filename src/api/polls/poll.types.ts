@@ -49,3 +49,6 @@ export type AddParticipantData = RejoinPollFields;
 export interface RequestWithAuth extends Request{
     body: RejoinPollFields;
 };
+
+// socket.io event types
+

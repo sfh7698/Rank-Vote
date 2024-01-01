@@ -1,6 +1,6 @@
 import { Socket, Server } from 'socket.io';
-import { generalLogger } from '../../utils/loggers';
-import { getNumSockets } from '../../utils/sockets';
+import { generalLogger } from '../utils/loggers';
+import { getNumSockets } from '../utils/sockets';
 
 export default (io: Server, socket: Socket) => {
 

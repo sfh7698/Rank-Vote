@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import app from './app';
-import pollHandlers from './api/polls/poll.gateway';
+import pollHandlers from './sockets/poll.gateway';
 import { generalLogger } from './utils/loggers';
 import { getNumSockets } from './utils/sockets';
 import { ServerToClientEvents } from './api/polls/poll.types';

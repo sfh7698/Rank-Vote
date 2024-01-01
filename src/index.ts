@@ -4,10 +4,11 @@ import app from './app';
 import pollHandlers from './api/polls/poll.gateway';
 import { generalLogger } from './utils/loggers';
 import { getNumSockets } from './utils/sockets';
+import { ServerToClientEvents } from './api/polls/poll.types';
 
 const server = createServer(app);
 
-const io = new Server(server);
+const io = new Server<ServerToClientEvents>(server);
 
 const onConnection = (socket: Socket) => {
     generalLogger.info(`WS Client  with id: ${socket.id} connected`);

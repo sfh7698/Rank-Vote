@@ -51,4 +51,8 @@ export interface RequestWithAuth extends Request{
 };
 
 // socket.io event types
+export interface ServerToClientEvents {
+    disconnect: () => void;
+    hello: (message: string) => void;
+}
 

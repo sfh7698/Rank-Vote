@@ -14,9 +14,11 @@ const corsOptions = {
   origin: process.env.CLIENT_DOMAIN || 'http://localhost:3000'
 };
 
+const stream = process.env.NODE_ENV === 'development' ? process.stdout : logStream;
+
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(morgan('common', {stream: logStream}));
+app.use(morgan('common', {stream: stream}));
 app.use('/api', api);
 app.use(globalErrorhandler);
 

@@ -1,11 +1,16 @@
 import { Socket, Server } from 'socket.io';
-import server from '../../index';
 import { generalLogger } from '../../utils/loggers';
+import { getNumSockets } from '../../utils/sockets';
 
-const io = new Server(server);
+export default (io: Server, socket: Socket) => {
 
-generalLogger.info('Websocket gateway initialized');
+    const handleDisconnect = () => {
+        generalLogger.info(`Disconnected socket id: ${socket.id}`);
+        generalLogger.info(`Number of connected sockets: ${getNumSockets(io, '/polls')}`);
 
-io.of('/polls').on('connection', (socket: Socket) => {
+        // TODO - remove client from poll and send `participants_updated` event to remaining clients
+    }
 
-});
+    socket.on('disconnect', handleDisconnect);
+
+}

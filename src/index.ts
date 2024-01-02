@@ -1,15 +1,17 @@
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import app from './app';
 import { generalLogger } from './utils/loggers';
-import { ServerToClientEvents } from './api/polls/poll.types';
+import { ServerToClientEvents, SocketWithAuth } from './sockets/socket.types';
+import { createTokenMiddleware } from './sockets/socket.middlewares';
 import onConnection from './sockets';
+import app from './app';
 
 const server = createServer(app);
 
-const io = new Server<ServerToClientEvents>(server);
+const io = new Server<ServerToClientEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>(server);
 
-io.of('/polls').on('connection', onConnection);
+io.of('polls').use(createTokenMiddleware).on('connection', onConnection)
 
 const port = process.env.PORT || 3000;
 

@@ -20,9 +20,6 @@ export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFuncti
     try {
         const payload = jwt.verify(accessToken, process.env.JWT_SECRET) as JwtPayload;
 
-        if (typeof payload.subject !== 'string' || typeof payload.pollID !== 'string' || typeof payload.name !== 'string'){
-            return res.sendStatus(401);
-        }
         req.body.userID = payload.subject;
         req.body.pollID = payload.pollID;
         req.body.name = payload.name;
@@ -31,7 +28,4 @@ export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFuncti
     } catch (e){
         return res.sendStatus(401);
     }
-
-            
-
 }

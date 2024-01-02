@@ -5,6 +5,9 @@ import { getNumSockets } from '../utils/sockets';
 export default (io: Server, socket: Socket) => {
 
     const handleDisconnect = () => {
+        generalLogger.info(`Socket disconnected with userID: ${socket.data.userID}, pollID: ${socket.data.pollID} 
+        and name: ${socket.data.name}`);
+
         generalLogger.info(`Disconnected socket id: ${socket.id}`);
         generalLogger.info(`Number of connected sockets: ${getNumSockets(io, '/polls')}`);
 

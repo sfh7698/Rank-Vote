@@ -49,10 +49,3 @@ export type AddParticipantData = RejoinPollFields;
 export interface RequestWithAuth extends Request{
     body: RejoinPollFields;
 };
-
-// socket.io event types
-export interface ServerToClientEvents {
-    disconnect: () => void;
-    hello: (message: string) => void;
-}
-

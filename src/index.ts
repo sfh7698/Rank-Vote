@@ -11,6 +11,7 @@ const server = createServer(app);
 
 const io = new Server<ServerToClientEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>(server);
 
+// TODO - add a validation middleware
 io.of('polls').use(createTokenMiddleware).on('connection', onConnection)
 
 const port = process.env.PORT || 3000;

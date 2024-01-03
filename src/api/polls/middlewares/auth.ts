@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { generalLogger } from '../../../utils/loggers';
 import { RequestWithAuth } from '../poll.types';
+import { AppError } from '../../../utils/error';
 
 export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFunction) => {
     generalLogger.info(`Checking for auth token on request body ${req.body}`);
@@ -10,11 +11,11 @@ export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFuncti
     const accessToken = authHeader && authHeader.split(' ')[1];
 
     if (accessToken === undefined) {
-        return res.sendStatus(401);
+        return res.status(400).json({message: "Access Token not found"});
     }
 
     if (process.env.JWT_SECRET === undefined) {
-        throw new Error("jwt secret not defined");
+        throw new AppError(500, "jwt secret not defined");
     }
 
     try {
@@ -26,6 +27,6 @@ export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFuncti
         next();
 
     } catch (e){
-        return res.sendStatus(401);
+        res.status(401).json(e);
     }
 }

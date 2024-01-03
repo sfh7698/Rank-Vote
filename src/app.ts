@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import fs from 'fs';
 import { filename } from './utils/loggers';
 import api from './api';
-import { globalErrorhandler } from './error';
+import { globalErrorhandler } from './utils/error';
 
 const app: Express = express();
 

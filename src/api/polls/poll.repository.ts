@@ -1,4 +1,5 @@
 import redisClient from '../../redis/redis';
+import { AppError } from '../../utils/error';
 import { errorLogger, generalLogger } from '../../utils/loggers';
 import { AddParticipantData, CreatePollData, Poll } from './poll.types';
 
@@ -26,9 +27,9 @@ export default class PollsRepository {
             .exec();
             return initialPoll;
 
-        } catch(e) {
+        } catch (e) {
             errorLogger.error(e);
-            throw e;
+            throw new AppError(500);
         }
     }
 
@@ -47,8 +48,8 @@ export default class PollsRepository {
 
             return JSON.parse(currentPoll);
         } catch (e) {
-            errorLogger.error(`Failed to get pollID ${pollID}`);
-            throw e;
+            errorLogger.error(e);
+            throw new AppError(500, `Failed to get pollID ${pollID}`);
         }
     }
 
@@ -68,8 +69,8 @@ export default class PollsRepository {
             return poll;
 
         } catch (e) {
-            errorLogger.error(`Failed to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
-            throw e;
+            errorLogger.error(e);
+            throw new AppError(500, `Failed to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
         }
     }
 }

@@ -1,6 +1,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { generalLogger } from "../utils/loggers";
 import { Socket } from "socket.io";
+import { errorLogger } from "../utils/loggers";
 
 export const createTokenMiddleware = (socket: Socket, next: (err?: any) => void) => {
     const token = socket.handshake.auth.token || socket.handshake.headers['token'];
@@ -8,7 +9,9 @@ export const createTokenMiddleware = (socket: Socket, next: (err?: any) => void)
     generalLogger.info(`Validating auth token before connection: ${token}`);
 
     if (process.env.JWT_SECRET === undefined) {
-        throw new Error("jwt secret not defined");
+        errorLogger.error("jwt secret not defined");
+        socket.emit("error", "Internal Server Error");
+        return;    
     }
 
     try {

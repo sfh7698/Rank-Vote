@@ -1,8 +1,7 @@
 import { Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { generalLogger } from '../../../utils/loggers';
+import { errorLogger, generalLogger } from '../../../utils/loggers';
 import { RequestWithAuth } from '../poll.types';
-import { AppError } from '../../../utils/error';
 
 export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFunction) => {
     generalLogger.info(`Checking for auth token on request body ${req.body}`);
@@ -15,7 +14,8 @@ export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFuncti
     }
 
     if (process.env.JWT_SECRET === undefined) {
-        throw new AppError(500, "jwt secret not defined");
+        errorLogger.error("jwt secret not defined");
+        return res.sendStatus(500);
     }
 
     try {

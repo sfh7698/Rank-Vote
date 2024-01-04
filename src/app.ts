@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import fs from 'fs';
 import { filename } from './utils/loggers';
 import api from './api';
-import { globalErrorhandler } from './utils/error';
+import { apiErrorhandler } from './utils/errorHandler';
 
 const app: Express = express();
 
@@ -20,6 +20,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan('common', {stream: stream}));
 app.use('/api', api);
-app.use(globalErrorhandler);
+app.use(apiErrorhandler);
 
 export default app;

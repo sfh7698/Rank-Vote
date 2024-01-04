@@ -10,8 +10,7 @@ export const createTokenMiddleware = (socket: Socket, next: (err?: any) => void)
 
     if (process.env.JWT_SECRET === undefined) {
         errorLogger.error("jwt secret not defined");
-        socket.emit("error", "Internal Server Error");
-        return;    
+        throw new Error("Internal Server Error");  
     }
 
     try {

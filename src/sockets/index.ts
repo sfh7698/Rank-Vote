@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 import { generalLogger } from '../utils/loggers';
-import { getNumSockets } from '../utils/sockets';
+import { getNumSockets } from './utils/sockets';
 import pollHandlers from './poll.gateway';
 import io from '../index';
 

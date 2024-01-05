@@ -1,10 +1,10 @@
-import { Socket } from 'socket.io';
 import { generalLogger } from '../utils/loggers';
 import { getNumSockets } from './utils/sockets';
 import pollHandlers from './poll.gateway';
 import io from '../index';
+import { SocketWithAuth } from './socket.types';
 
-const onConnection = (socket: Socket) => {
+const onConnection = (socket: SocketWithAuth) => {
     generalLogger.info(`Socket connected with userID: ${socket.data.userID}, pollID: ${socket.data.pollID}, and name: ${socket.data.name}`)
 
     generalLogger.info(`WS Client  with id: ${socket.id} connected`);

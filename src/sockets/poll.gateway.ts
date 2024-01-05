@@ -1,8 +1,9 @@
-import { Socket, Server } from 'socket.io';
+import { Server } from 'socket.io';
 import { generalLogger } from '../utils/loggers';
 import { getNumSockets } from './utils/sockets';
+import { SocketWithAuth } from './socket.types';
 
-export default (io: Server, socket: Socket) => {
+export default (io: Server, socket: SocketWithAuth) => {
 
     // use a try/catch block inside of event handlers to catch the errors and emit error events
     const handleDisconnect = () => {

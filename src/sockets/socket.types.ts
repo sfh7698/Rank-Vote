@@ -1,4 +1,5 @@
 import { RejoinPollFields } from "../api/polls/poll.types";
+import { Socket } from 'socket.io';
 
 export interface ServerToClientEvents {
     disconnect: () => void;
@@ -6,6 +7,6 @@ export interface ServerToClientEvents {
     error: (error: string) => void;
 }
 
-export interface SocketWithAuth {
+export interface SocketWithAuth extends Socket {
     data: RejoinPollFields;
 };

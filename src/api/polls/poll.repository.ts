@@ -12,6 +12,7 @@ export default class PollsRepository {
             votesPerVoter,
             participants: {},
             adminID: userID,
+            hasStarted: false
         }
 
         generalLogger.info(`Creating new poll: ${JSON.stringify(initialPoll, null, 2)} with TTL ${this.ttl}`);
@@ -70,6 +71,23 @@ export default class PollsRepository {
         } catch (e) {
             errorLogger.error(e);
             throw new Error(`Failed to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
+        }
+    }
+
+    removeParticipant = async(pollID: string, userID: string): Promise<Poll> => {
+        generalLogger.info(`removing userID: ${userID} from poll: ${pollID}`);
+
+        const key = `polls:${pollID}`;
+        const participantPath = `.participants.${userID}`;
+
+        try {
+            await redisClient.call('JSON.DEL', key, participantPath);
+
+            return this.getPoll(pollID);
+        } catch (e) {
+            errorLogger.error(e);
+            throw new Error(`Failed to remove userID: ${userID} from poll: ${pollID}`)
+
         }
     }
 }

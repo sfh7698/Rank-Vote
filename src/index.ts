@@ -10,9 +10,10 @@ import app from './app';
 const server = createServer(app);
 
 const io = new Server<ServerToClientEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>(server);
+const pollsNameSpace = io.of('polls');
 
 // TODO - add a validation middleware
-io.of('polls').use(createTokenMiddleware).on('connection', onConnection);
+pollsNameSpace.use(createTokenMiddleware).on('connection', onConnection);
 
 const port = process.env.PORT || 3000;
 
@@ -20,6 +21,6 @@ server.listen(port, () => {
     generalLogger.info(`Server is running at http://localhost:${port}`);
 });
 
-export default io;
+export default pollsNameSpace;
 
 

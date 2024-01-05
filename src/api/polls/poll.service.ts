@@ -4,7 +4,8 @@ import {
     JoinPollFields, 
     RejoinPollFields, 
     PollServiceFields,
-    Poll} from "./poll.types";
+    Poll,
+    AddParticipantFields} from "./poll.types";
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
 import generateToken  from "../../utils/generateToken"
@@ -52,8 +53,18 @@ export default class PollService {
     rejoinPoll = async (fields: RejoinPollFields) : Promise<Poll> => {
         generalLogger.info(`Rejoining poll with ID: ${fields.pollID} for user with ID: ${fields.userID} with name: ${fields.name}`);
 
-        const joinedPoll = await this.pollRepository.addParticipant(fields);
+        return await this.pollRepository.addParticipant(fields);
+    }
 
-        return joinedPoll;
+    addParticipant = async(addParticipant: AddParticipantFields): Promise<Poll> => {
+        return await this.pollRepository.addParticipant(addParticipant);
+    }
+
+    removeParticipant = async(pollID: string, userID: string): Promise<Poll | void> => {
+        const poll = await this.pollRepository.getPoll(pollID);
+
+        if(!poll.hasStarted) {
+            return await this.pollRepository.removeParticipant(pollID, userID);
+        }
     }
 }

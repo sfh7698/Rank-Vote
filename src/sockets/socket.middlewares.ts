@@ -1,9 +1,9 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { generalLogger } from "../utils/loggers";
 import { errorLogger } from "../utils/loggers";
-import { SocketWithAuth } from "./socket.types";
+import { Socket } from "socket.io";
 
-export const createTokenMiddleware = (socket: SocketWithAuth, next: (err?: any) => void) => {
+export const createTokenMiddleware = (socket: Socket, next: (err?: any) => void) => {
     const token = socket.handshake.auth.token || socket.handshake.headers['token'];
 
     generalLogger.info(`Validating auth token before connection: ${token}`);

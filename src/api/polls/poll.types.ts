@@ -13,7 +13,7 @@ export interface Poll {
     // nominations: Nominations;
     // rankings; Rankings
     // results: Results;
-    // hasStarted: boolean;
+    hasStarted: boolean;
 }
 
 //service types
@@ -36,6 +36,10 @@ export type PollServiceFields = {
 };
 
 export type RejoinPollFields = JoinPollFields & { userID: string };
+
+export type AddParticipantFields = RejoinPollFields;
+
+export type RemoveParticipantFields = Pick<RejoinPollFields, "pollID" | "userID">;
 
 // controller types
 export type PollResponse = Omit<PollServiceFields, "accessToken">;

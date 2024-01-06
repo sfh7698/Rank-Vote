@@ -8,18 +8,18 @@ const onConnection = async(socket: Socket) => {
     const pollService = new PollService();
     const { userID, pollID, name } = socket.data;
 
-    generalLogger.info(`Socket connected with userID: ${userID}, pollID: ${pollID}, and name: ${name}`)
+    // generalLogger.info(`Socket connected with userID: ${userID}, pollID: ${pollID}, and name: ${name}`)
 
-    generalLogger.info(`WS Client  with id: ${socket.id} connected`);
-    generalLogger.info(`Number of connected sockets: ${io.sockets.size}`);
+    // generalLogger.info(`WS Client  with id: ${socket.id} connected`);
+    // generalLogger.info(`Number of connected sockets: ${io.sockets.size}`);
 
     const roomName = pollID;
     await socket.join(roomName);
     
-    const connectedClients = io.adapter.rooms?.get(roomName)?.size ?? 0;
+    // const connectedClients = io.adapter.rooms?.get(roomName)?.size ?? 0;
 
-    generalLogger.info(`userID: ${userID} joined room with name: ${roomName}`);
-    generalLogger.info(`Total clients connected to room '${roomName}': ${connectedClients}`);
+    // generalLogger.info(`userID: ${userID} joined room with name: ${roomName}`);
+    // generalLogger.info(`Total clients connected to room '${roomName}': ${connectedClients}`);
 
     try {
         const updatedPoll = await pollService.addParticipant({

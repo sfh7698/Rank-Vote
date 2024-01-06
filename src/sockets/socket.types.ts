@@ -4,8 +4,15 @@ export interface ServerToClientEvents {
     poll_updated: (poll: Poll) => void;
     disconnect: () => void;
     error: (error: string) => void;
+    connect_error: (error: string) => void;
+}
+
+export interface ClientToServerEvents {
+    removeParticipant: (id: string) => void;
 }
 
 export interface SocketWithAuth {
     data: RejoinPollFields;
 };
+
+export type NextFunction = (err?: any) => void;

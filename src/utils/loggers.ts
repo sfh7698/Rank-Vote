@@ -8,7 +8,7 @@ const transport = process.env.NODE_ENV === 'development' ?
 
 
 export const generalLogger = winston.createLogger({
-    level: 'info',
+    level: process.env.LOGGER_LEVEL,
     format: winston.format.combine(
         winston.format.timestamp( {format: 'YYYY-MM-DD HH:mm:ss'} ),
         winston.format.simple()

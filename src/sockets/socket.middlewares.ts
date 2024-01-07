@@ -14,7 +14,7 @@ export const createTokenMiddleware = (socket: Socket, next: NextFunction) => {
     if (process.env.JWT_SECRET === undefined) {
         errorLogger.error("jwt secret not defined");
         socket.emit("error", "Internal Server Error");
-        return  
+        return;
     }
 
     try {
@@ -44,7 +44,7 @@ export const authAdmin = async (socket: Socket, next: NextFunction) => {
     if (process.env.JWT_SECRET === undefined) {
         errorLogger.error("jwt secret not defined");
         socket.emit("error", "Internal Server Error");
-        return  
+        return;
     }
 
     try {

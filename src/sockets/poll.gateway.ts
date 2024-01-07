@@ -45,13 +45,8 @@ export default (io: Namespace, socket: Socket) => {
    }
     socket.use((packet, next) => {
         const eventName = packet[0];
-        try {
-            if (eventName === 'remove_participant') {
-                authAdmin(socket, next);
-            }
-
-        } catch (e) {
-            socket.emit("error", e);
+        if (eventName === 'remove_participant') {
+            authAdmin(socket, next);
         }
     });
 

@@ -1,6 +1,6 @@
 import redisClient from '../../redis/redis';
 import { errorLogger, generalLogger } from '../../utils/loggers';
-import { AddParticipantData, CreatePollData, Poll } from './poll.types';
+import { AddParticipantData, CreatePollData, Poll, AddNominationData } from './poll.types';
 
 export default class PollsRepository {
     private readonly ttl = process.env.POLL_DURATION;
@@ -11,6 +11,7 @@ export default class PollsRepository {
             topic,
             votesPerVoter,
             participants: {},
+            nominations: {},
             adminID: userID,
             hasStarted: false
         }
@@ -82,10 +83,43 @@ export default class PollsRepository {
         try {
             await redisClient.call('JSON.DEL', key, participantPath);
             return await this.getPoll(pollID);
+
         } catch (e) {
             errorLogger.error(e);
             throw new Error(`Failed to remove userID: ${userID} from poll: ${pollID}`)
 
+        }
+    }
+
+    addNomination = async({pollID, nominationID, nomination}: AddNominationData): Promise<Poll> => {
+        generalLogger.info(`Attempting to add a nomination with nominationID/nomination: ${nominationID}/${nomination.text} to pollID: ${pollID}`);
+
+        const key = `polls:${pollID}`;
+        const nominationPath = `.nominations.${nominationID}`;
+
+        try {
+            await redisClient.call('JSON.SET', key, nominationPath, JSON.stringify(nomination));
+            return this.getPoll(pollID);
+
+        } catch(e) {
+            errorLogger.error(e);
+            throw new Error(`Failed to add a nomination with nominationID/text: ${nominationID}/${nomination.text} to pollID: ${pollID}`);
+        }
+    }
+
+    removeNomination = async(pollID: string, nominationID: string): Promise<Poll> => {
+        generalLogger.info(`removing nominationID: ${nominationID} from poll: ${pollID}`);
+
+        const key = `polls:${pollID}`;
+        const nominationPath = `.nominations.${nominationID}`;
+
+        try {
+            await redisClient.call('JSON.DEL', key, nominationPath);
+            return this.getPoll(pollID);
+
+        } catch(e) {
+            errorLogger.error(e);
+            throw new Error(`Failed to remove nominationID: ${nominationID} from poll: ${pollID}`);
         }
     }
 }

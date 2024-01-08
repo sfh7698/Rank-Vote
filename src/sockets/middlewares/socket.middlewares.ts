@@ -1,11 +1,12 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { generalLogger } from "../utils/loggers";
-import { errorLogger } from "../utils/loggers";
+import { generalLogger } from "../../utils/loggers";
+import { errorLogger } from "../../utils/loggers";
 import { Socket } from "socket.io";
-import { NextFunction } from "./socket.types";
-import { getToken } from "./utils/getToken";
-import PollService from "../api/polls/poll.service";
+import { NextFunction } from "../socket.types";
+import { getToken } from "../utils/getToken";
+import PollService from "../../api/polls/poll.service";
 
+// change function name to verifyToken
 export const createTokenMiddleware = (socket: Socket, next: NextFunction) => {
     const token = getToken(socket);
 
@@ -35,6 +36,7 @@ export const authAdmin = async (socket: Socket, next: NextFunction) => {
     const pollService = new PollService();
     const token = getToken(socket);
 
+    // move the following if block into createTokenMiddleware
     if(!token) {
         errorLogger.error('No authorization token provided');
         socket.emit('error', 'No token provided');
@@ -49,7 +51,6 @@ export const authAdmin = async (socket: Socket, next: NextFunction) => {
 
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
-        // use env variables to set the level for logs
         // generalLogger.debug(`Validating admin using token payload`, payload);
 
         const { subject, pollID } = payload;
@@ -65,4 +66,6 @@ export const authAdmin = async (socket: Socket, next: NextFunction) => {
     } catch (e) {
         socket.emit('error', e);
     }
+
+    // create a middlewares folder and create new file that exports a function that validates a Joi schema of nomination data
 }

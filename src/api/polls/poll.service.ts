@@ -1,11 +1,12 @@
-import { createPollID, createUserID } from "../../utils/ids";
+import { createPollID, createUserID, createNominationID } from "../../utils/ids";
 import { 
     CreatePollFields, 
     JoinPollFields, 
     RejoinPollFields, 
     PollServiceFields,
     Poll,
-    AddParticipantFields} from "./poll.types";
+    AddParticipantFields,
+    AddNominationFields} from "./poll.types";
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
 import generateToken  from "../../utils/generateToken"
@@ -70,5 +71,20 @@ export default class PollService {
 
     getPoll = async(pollID: string): Promise<Poll> => {
         return await this.pollRepository.getPoll(pollID);
+    }
+    
+    addNomination = async({pollID, userID, text}: AddNominationFields): Promise<Poll> => {
+        return this.pollRepository.addNomination({
+            pollID,
+            nominationID: createNominationID(),
+            nomination: {
+                userID,
+                text
+            }
+        });
+    }
+
+    removeNomination = async(pollID: string, nominationID: string): Promise<Poll> => {
+        return this.pollRepository.removeNomination(pollID, nominationID);
     }
 }

@@ -1,55 +1,69 @@
 import { Request } from "express";
 
-export interface Participants {
+export type Participants = {
     [particpantID: string]: string
 }
 
-export interface Poll {
+export type Nomination = {
+    userID: string,
+    text: string
+}
+
+export type Nominations = {
+    [nominationID: string]: Nomination
+}
+
+export type Poll = {
     id: string;
     topic: string;
     votesPerVoter: number,
     participants: Participants;
     adminID: string;
-    // nominations: Nominations;
+    nominations: Nominations;
     // rankings; Rankings
     // results: Results;
     hasStarted: boolean;
 }
 
-//service types
-// export type CreatePollFields = {
-//     topic: string,
-//     votesPerVoter: number,
-//     name: string
-// }
+
+/*
+service types
+*/
 export type CreatePollFields = Pick<Poll, "topic" | "votesPerVoter"> & { name: string };
 
-// export type JoinPollFields = {
-//     pollID: string,
-//     name: string
-// }
-export type JoinPollFields = Pick<CreatePollFields, "name"> & { pollID: string };
+export type JoinPollFields = { pollID: string } & Pick<CreatePollFields, "name">;
 
 export type PollServiceFields = { 
     poll: Poll,
     accessToken: string
 };
 
-export type RejoinPollFields = JoinPollFields & { userID: string };
+export type RejoinPollFields = JoinPollFields & Pick<Nomination, "userID">;
 
 export type AddParticipantFields = RejoinPollFields;
 
-export type RemoveParticipantFields = Pick<RejoinPollFields, "pollID" | "userID">;
+export type AddNominationFields = Pick<JoinPollFields, "pollID"> & Nomination;
 
-// controller types
+/*
+controller types
+*/
 export type PollResponse = Omit<PollServiceFields, "accessToken">;
 
-// repository types
-// export type CreatePollData = Pick<CreatePollFields, "topic" | "votesPerVoter"> & {pollID: string, userID: string};
+/*
+repository types
+*/
 export type CreatePollData = Pick<CreatePollFields, "topic" | "votesPerVoter"> & Pick<RejoinPollFields, "pollID" | "userID">;
+
 export type AddParticipantData = RejoinPollFields;
 
-// middleware types
+export type AddNominationData = Pick<JoinPollFields, "pollID"> & {
+    nominationID: string,
+    nomination: Nomination
+}
+
+/*
+middleware types
+*/
 export interface RequestWithAuth extends Request{
     body: RejoinPollFields;
 };

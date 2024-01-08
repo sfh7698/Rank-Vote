@@ -8,7 +8,8 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-    removeParticipant: (id: string) => void;
+    removeParticipant: (params: { id: string }) => void;
+    nominate: (params: {text: string}) => void;
 }
 
 export interface SocketWithAuth {

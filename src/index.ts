@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { generalLogger } from './utils/loggers';
 import { ServerToClientEvents, SocketWithAuth, ClientToServerEvents } from './sockets/socket.types';
-import { createTokenMiddleware } from './sockets/socket.middlewares';
+import { createTokenMiddleware } from './sockets/middlewares/socket.middlewares';
 import onConnection from './sockets';
 import app from './app';
 

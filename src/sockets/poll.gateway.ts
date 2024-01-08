@@ -1,13 +1,12 @@
-import { Namespace } from 'socket.io';
+import { Namespace, Socket } from 'socket.io';
 import { generalLogger } from '../utils/loggers';
-import { Socket } from 'socket.io';
 import PollService from '../api/polls/poll.service';
-import { authAdmin } from './middlewares/socket.middlewares';
+import { ClientToServerEvents } from './socket.types';
 
 export default (io: Namespace, socket: Socket) => {
     const pollService = new PollService();
 
-    const handleDisconnect = async () => {
+    const handleDisconnect: ClientToServerEvents["disconnect"] = async () => {
         const { pollID, userID } = socket.data;
         try {
             const updatedPoll = await pollService.removeParticipant(pollID, userID);
@@ -28,7 +27,7 @@ export default (io: Namespace, socket: Socket) => {
    }
 
    // change remove participant to handle receiving an object instead of just a string
-   const removeParticipant = async (id: string) => {
+   const removeParticipant: ClientToServerEvents['remove_participant'] = async ({id}) => {
         const { pollID } = socket.data;
         generalLogger.info(`Attempting to remove participant ${id} from poll ${pollID}`);
 
@@ -45,15 +44,15 @@ export default (io: Namespace, socket: Socket) => {
 
    }
 
-   const nominate = async (nomination: {text: string}) => {
+   const nominate: ClientToServerEvents["nominate"] = async ({text}) => {
         const { userID, pollID } = socket.data;
-        generalLogger.info(`Attempting to add nomination for user ${userID} to poll ${pollID}\n${nomination.text}`);
+        generalLogger.info(`Attempting to add nomination for user ${userID} to poll ${pollID}\n${text}`);
 
         try {
             const updatedPoll = await pollService.addNomination({
                 pollID,
                 userID,
-                text: nomination.text
+                text
             });
 
             io.to(pollID).emit('poll_updated', updatedPoll);
@@ -64,17 +63,24 @@ export default (io: Namespace, socket: Socket) => {
 
    }
 
-    socket.use((packet, next) => {
-        const eventName = packet[0];
-        // create a file in utils that exports a function that checks if the event is an admin event then use as condition
-        if (eventName === 'remove_participant') {
-            authAdmin(socket, next);
-        }
-    });
-    // add another socket.use() middleware that checks if the event is of type remove_nomination and then validate schema using imported function
+   const removeNomination: ClientToServerEvents["remove_nomination"] = async ({id}) => {
+        const { pollID } = socket.data;
+        generalLogger.info(`Attempting to remove nomination ${id} from poll ${pollID}`);
 
-    socket.on('nominate', nominate);
-    socket.on('remove_participant', removeParticipant);
-    socket.on('disconnect', handleDisconnect);
+        try {
+            const updatedPoll = await pollService.removeNomination(pollID, id);
+
+            io.to(pollID).emit("poll_updated", updatedPoll);
+
+        } catch(e) {
+            socket.emit("error", e);
+        }
+
+   }
+
+   socket.on('remove_participant', removeParticipant);
+   socket.on('nominate', nominate);
+   socket.on('remove_nomination', removeNomination);
+   socket.on('disconnect', handleDisconnect);
 
 }

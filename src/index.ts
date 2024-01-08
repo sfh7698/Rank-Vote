@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { generalLogger } from './utils/loggers';
 import { ServerToClientEvents, SocketWithAuth, ClientToServerEvents } from './sockets/socket.types';
-import { createTokenMiddleware } from './sockets/middlewares/socket.middlewares';
+import { verifyToken } from './sockets/middlewares/verifyToken';
 import onConnection from './sockets';
 import app from './app';
 
@@ -12,7 +12,7 @@ const server = createServer(app);
 const io = new Server<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>(server);
 const pollsNameSpace = io.of('polls');
 
-pollsNameSpace.use(createTokenMiddleware).on('connection', onConnection);
+pollsNameSpace.use(verifyToken).on('connection', onConnection);
 
 const port = process.env.PORT || 3000;
 

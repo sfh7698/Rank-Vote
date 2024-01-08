@@ -1,5 +1,6 @@
 import { generalLogger } from '../utils/loggers';
 import pollHandlers from './poll.gateway';
+import middlewares from './middlewares';
 import io from '../index';
 import { Socket } from 'socket.io';
 import PollService from '../api/polls/poll.service';
@@ -33,6 +34,7 @@ const onConnection = async(socket: Socket) => {
         socket.emit("error", e);
     }
 
+    middlewares(io, socket);
     pollHandlers(io, socket);
 }
 

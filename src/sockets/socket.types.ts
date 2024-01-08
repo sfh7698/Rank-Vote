@@ -2,14 +2,15 @@ import { Poll, RejoinPollFields } from "../api/polls/poll.types";
 
 export interface ServerToClientEvents {
     poll_updated: (poll: Poll) => void;
-    disconnect: () => void;
     error: (error: string) => void;
     connect_error: (error: string) => void;
 }
 
 export interface ClientToServerEvents {
-    removeParticipant: (params: { id: string }) => void;
+    disconnect: () => void;
+    remove_participant: (params: { id: string }) => void;
     nominate: (params: {text: string}) => void;
+    remove_nomination: (params: {id: string}) => void;
 }
 
 export interface SocketWithAuth {

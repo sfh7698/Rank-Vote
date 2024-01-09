@@ -26,7 +26,6 @@ export default (io: Namespace, socket: Socket) => {
         }        
    }
 
-   // change remove participant to handle receiving an object instead of just a string
    const removeParticipant: ClientToServerEvents['remove_participant'] = async ({id}) => {
         const { pollID } = socket.data;
         generalLogger.debug(`Attempting to remove participant ${id} from poll ${pollID}`);

@@ -3,7 +3,7 @@ import { Poll, RejoinPollFields } from "../api/polls/poll.types";
 export interface ServerToClientEvents {
     poll_updated: (poll: Poll) => void;
     error: (error: string) => void;
-    connect_error: (error: string) => void;
+    connect_error: (error: Error) => void;
 }
 
 export interface ClientToServerEvents {

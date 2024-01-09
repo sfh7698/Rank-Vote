@@ -1,4 +1,5 @@
 import redisClient from '../../redis/redis';
+import { UnknownException } from '../../utils/exceptions';
 import { errorLogger, generalLogger } from '../../utils/loggers';
 import { AddParticipantData, 
         CreatePollData, 
@@ -35,7 +36,8 @@ export default class PollsRepository {
 
         } catch (e) {
             errorLogger.error(e);
-            throw new Error();
+            // throw new Error();
+            throw new UnknownException(`Failed to add poll ${JSON.stringify(initialPoll)}`);
         }
     }
 
@@ -55,7 +57,7 @@ export default class PollsRepository {
             return JSON.parse(currentPoll);
         } catch (e) {
             errorLogger.error(e);
-            throw new Error(`Failed to get pollID ${pollID}`);
+            throw new UnknownException(`Failed to get pollID ${pollID}`);
         }
     }
 
@@ -76,7 +78,7 @@ export default class PollsRepository {
 
         } catch (e) {
             errorLogger.error(e);
-            throw new Error(`Failed to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
+            throw new UnknownException(`Failed to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
         }
     }
 
@@ -91,7 +93,7 @@ export default class PollsRepository {
 
         } catch (e) {
             errorLogger.error(e);
-            throw new Error(`Failed to remove userID: ${userID} from poll: ${pollID}`)
+            throw new UnknownException(`Failed to remove userID: ${userID} from poll: ${pollID}`)
 
         }
     }
@@ -108,7 +110,7 @@ export default class PollsRepository {
 
         } catch(e) {
             errorLogger.error(e);
-            throw new Error(`Failed to add a nomination with nominationID/text: ${nominationID}/${nomination.text} to pollID: ${pollID}`);
+            throw new UnknownException(`Failed to add a nomination with nominationID/text: ${nominationID}/${nomination.text} to pollID: ${pollID}`);
         }
     }
 
@@ -124,7 +126,7 @@ export default class PollsRepository {
 
         } catch(e) {
             errorLogger.error(e);
-            throw new Error(`Failed to remove nominationID: ${nominationID} from poll: ${pollID}`);
+            throw new UnknownException(`Failed to remove nominationID: ${nominationID} from poll: ${pollID}`);
         }
     }
 
@@ -140,7 +142,7 @@ export default class PollsRepository {
 
         } catch(e) {
             errorLogger.error(e);
-            throw new Error('Error starting the poll');
+            throw new UnknownException('Error starting the poll');
         }
     }
     
@@ -157,7 +159,7 @@ export default class PollsRepository {
 
         } catch(e) {
             errorLogger.error(e);
-            throw new Error('Error submitting rankings');
+            throw new UnknownException('Error submitting rankings');
 
         }
 

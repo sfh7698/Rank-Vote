@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { errorLogger, generalLogger } from '../../../utils/loggers';
 import { RequestWithAuth } from '../poll.types';
+import { BadRequestException, UnauthorizedException } from '../../../utils/exceptions';
 
 export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFunction) => {
     generalLogger.info(`Checking for auth token on request body ${req.body}`);
@@ -10,7 +11,7 @@ export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFuncti
     const accessToken = authHeader && authHeader.split(' ')[1];
 
     if (accessToken === undefined) {
-        return res.status(400).json({message: "Access Token not found"});
+        throw new BadRequestException("Access Token not found");
     }
 
     if (process.env.JWT_SECRET === undefined) {
@@ -27,6 +28,9 @@ export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFuncti
         next();
 
     } catch (e){
-        res.status(401).json(e);
+        if (e instanceof(Error)) {
+            throw new UnauthorizedException(401, e.message);
+        }
+        return res.sendStatus(401);
     }
 }

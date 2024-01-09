@@ -11,6 +11,7 @@ import {
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
 import generateToken  from "../../utils/generateToken"
+import { UnauthorizedException } from "../../utils/exceptions";
 
 export default class PollService {
     private readonly pollRepository: PollsRepository;
@@ -97,7 +98,7 @@ export default class PollService {
         const poll = await this.pollRepository.getPoll(rankingsData.pollID);
 
         if(!poll.hasStarted) {
-            throw new Error('Participants cannot rank until the poll has started');
+            throw new UnauthorizedException(403, 'Participants cannot rank until the poll has started');
         }
 
         return await this.pollRepository.addParticipantRankings(rankingsData);

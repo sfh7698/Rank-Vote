@@ -6,7 +6,8 @@ import {
     PollServiceFields,
     Poll,
     AddParticipantFields,
-    AddNominationFields} from "./poll.types";
+    AddNominationFields,
+    SubmitRankingsFields} from "./poll.types";
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
 import generateToken  from "../../utils/generateToken"
@@ -85,6 +86,20 @@ export default class PollService {
     }
 
     removeNomination = async(pollID: string, nominationID: string): Promise<Poll> => {
-        return this.pollRepository.removeNomination(pollID, nominationID);
+        return await this.pollRepository.removeNomination(pollID, nominationID);
+    }
+
+    startPoll = async (pollID: string): Promise<Poll> => {
+        return await this.pollRepository.startPoll(pollID);
+    }
+
+    submitRankings = async(rankingsData: SubmitRankingsFields): Promise<Poll> => {
+        const poll = await this.pollRepository.getPoll(rankingsData.pollID);
+
+        if(!poll.hasStarted) {
+            throw new Error('Participants cannot rank until the poll has started');
+        }
+
+        return await this.pollRepository.addParticipantRankings(rankingsData);
     }
 }

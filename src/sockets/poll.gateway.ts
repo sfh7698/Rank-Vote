@@ -29,7 +29,7 @@ export default (io: Namespace, socket: Socket) => {
    // change remove participant to handle receiving an object instead of just a string
    const removeParticipant: ClientToServerEvents['remove_participant'] = async ({id}) => {
         const { pollID } = socket.data;
-        generalLogger.info(`Attempting to remove participant ${id} from poll ${pollID}`);
+        generalLogger.debug(`Attempting to remove participant ${id} from poll ${pollID}`);
 
         try {
             const updatedPoll = await pollService.removeParticipant(pollID, id);
@@ -46,7 +46,7 @@ export default (io: Namespace, socket: Socket) => {
 
    const nominate: ClientToServerEvents["nominate"] = async ({text}) => {
         const { userID, pollID } = socket.data;
-        generalLogger.info(`Attempting to add nomination for user ${userID} to poll ${pollID}\n${text}`);
+        generalLogger.debug(`Attempting to add nomination for user ${userID} to poll ${pollID}\n${text}`);
 
         try {
             const updatedPoll = await pollService.addNomination({
@@ -65,7 +65,7 @@ export default (io: Namespace, socket: Socket) => {
 
    const removeNomination: ClientToServerEvents["remove_nomination"] = async ({id}) => {
         const { pollID } = socket.data;
-        generalLogger.info(`Attempting to remove nomination ${id} from poll ${pollID}`);
+        generalLogger.debug(`Attempting to remove nomination ${id} from poll ${pollID}`);
 
         try {
             const updatedPoll = await pollService.removeNomination(pollID, id);
@@ -78,6 +78,44 @@ export default (io: Namespace, socket: Socket) => {
 
    }
 
+   const startVote: ClientToServerEvents['start_vote'] = async () => {
+        const { pollID } = socket.data;
+        generalLogger.debug(`Attempting to start voting for poll: ${pollID}`);
+
+        try {
+            const updatedPoll = await pollService.startPoll(pollID);
+            io.to(pollID).emit("poll_updated", updatedPoll);
+
+        } catch(e) {
+            socket.emit("error", e);
+        }
+   }
+
+   const submitRankings: ClientToServerEvents["submit_rankings"] = async ({rankings}) => {
+        const { userID, pollID } = socket.data;
+        generalLogger.debug(`Submitting votes for user: ${userID} belonging to pollID: "${pollID}"`);
+
+        try {
+            const updatedPoll = await pollService.submitRankings({
+                pollID,
+                userID,
+                rankings
+            });
+
+            io.to(pollID).emit("poll_updated", updatedPoll);
+
+        } catch (e) {
+            //Create a function in utils with the following and call function in all socket catch blocks
+            if (e instanceof(Error)) {
+                socket.emit("error", e.message);
+            }
+        }
+
+
+   }
+
+   socket.on('submit_rankings', submitRankings);
+   socket.on('start_vote', startVote);
    socket.on('remove_participant', removeParticipant);
    socket.on('nominate', nominate);
    socket.on('remove_nomination', removeNomination);

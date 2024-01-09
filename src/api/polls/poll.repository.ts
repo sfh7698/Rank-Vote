@@ -1,6 +1,10 @@
 import redisClient from '../../redis/redis';
 import { errorLogger, generalLogger } from '../../utils/loggers';
-import { AddParticipantData, CreatePollData, Poll, AddNominationData } from './poll.types';
+import { AddParticipantData, 
+        CreatePollData, 
+        Poll, 
+        AddNominationData,
+        AddParticipantRankingsData } from './poll.types';
 
 export default class PollsRepository {
     private readonly ttl = process.env.POLL_DURATION;
@@ -12,6 +16,7 @@ export default class PollsRepository {
             votesPerVoter,
             participants: {},
             nominations: {},
+            rankings: {},
             adminID: userID,
             hasStarted: false
         }
@@ -121,5 +126,40 @@ export default class PollsRepository {
             errorLogger.error(e);
             throw new Error(`Failed to remove nominationID: ${nominationID} from poll: ${pollID}`);
         }
+    }
+
+    startPoll = async(pollID: string): Promise<Poll> => {
+        generalLogger.info(`setting hasStarted for poll: ${pollID}`);
+
+        const key = `polls:${pollID}`;
+
+        try {
+            await redisClient.call('JSON.SET', key, '.hasStarted', JSON.stringify(true));
+
+            return this.getPoll(pollID);
+
+        } catch(e) {
+            errorLogger.error(e);
+            throw new Error('Error starting the poll');
+        }
+    }
+    
+    addParticipantRankings = async({ pollID, userID, rankings }: AddParticipantRankingsData): Promise<Poll> => {
+        generalLogger.info(`Attempting to add rankings for userID/name: ${userID} to pollID: ${pollID}`, rankings);
+
+        const key = `polls:${pollID}`;
+        const rankingsPath = `.rankings.${userID}`;
+
+        try {
+            await redisClient.call('JSON.SET', key, rankingsPath, JSON.stringify(rankings));
+
+            return this.getPoll(pollID);
+
+        } catch(e) {
+            errorLogger.error(e);
+            throw new Error('Error submitting rankings');
+
+        }
+
     }
 }

@@ -9,8 +9,14 @@ export type Nomination = {
     text: string
 }
 
+export type NominationID = string;
+
 export type Nominations = {
-    [nominationID: string]: Nomination
+    [nominationID: NominationID]: Nomination
+}
+
+export type Rankings = {
+    [userID: string]: NominationID[];
 }
 
 export type Poll = {
@@ -20,7 +26,7 @@ export type Poll = {
     participants: Participants;
     adminID: string;
     nominations: Nominations;
-    // rankings; Rankings
+    rankings: Rankings
     // results: Results;
     hasStarted: boolean;
 }
@@ -44,6 +50,8 @@ export type AddParticipantFields = RejoinPollFields;
 
 export type AddNominationFields = Pick<JoinPollFields, "pollID"> & Nomination;
 
+export type SubmitRankingsFields = Pick<RejoinPollFields, "pollID" | "userID"> & { rankings: string[] };
+
 /*
 controller types
 */
@@ -60,6 +68,8 @@ export type AddNominationData = Pick<JoinPollFields, "pollID"> & {
     nominationID: string,
     nomination: Nomination
 }
+
+export type AddParticipantRankingsData = SubmitRankingsFields;
 
 /*
 middleware types

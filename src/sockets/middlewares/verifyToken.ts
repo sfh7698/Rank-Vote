@@ -26,6 +26,7 @@ export const verifyToken = (socket: Socket, next: NextFunction) => {
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
 
+        // Figure out how to type the following
         socket.data.userID = payload.subject;
         socket.data.pollID = payload.pollID;
         socket.data.name = payload.name;

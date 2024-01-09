@@ -5,9 +5,9 @@ import { NextFunction } from "../socket.types";
 import { getToken } from "../utils/getToken";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-const adminEvents = ["remove_participant", "remove_nomination"];
 
 export const isAdminEvent = (eventName: string) => {
+    const adminEvents = ["remove_participant", "remove_nomination", "start_vote"];
     return adminEvents.includes(eventName);
 }
 

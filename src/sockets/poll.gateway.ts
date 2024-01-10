@@ -5,119 +5,141 @@ import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth } from './so
 import { sendError } from './utils/errorHandler';
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
-export default (io: Namespace<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>,
-    socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>) => {
-    const pollService = new PollService();
+class PollHandlers implements ClientToServerEvents {
+    private readonly pollService;
+    private socket;
+    private io;
 
-    const handleDisconnect: ClientToServerEvents["disconnect"] = async () => {
-        const { pollID, userID } = socket.data;
+    constructor(
+        io: Namespace<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>,
+        socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>
+        ) {
+        this.pollService = new PollService();
+        this.socket = socket;
+        this.io = io;
+
+    }
+
+    disconnect = async () => {
+        const { pollID, userID } = this.socket.data;
         try {
-            const updatedPoll = await pollService.removeParticipant(pollID, userID);
+            const updatedPoll = await this.pollService.removeParticipant(pollID, userID);
 
             const roomName = pollID;
-            const clientCount = io.adapter.rooms?.get(roomName)?.size ?? 0;
+            const clientCount = this.io.adapter.rooms?.get(roomName)?.size ?? 0;
 
-            generalLogger.info(`Disconnected socket id: ${socket.id}`);
-            generalLogger.info(`Number of connected sockets: ${io.sockets.size}`);
+            generalLogger.info(`Disconnected socket id: ${this.socket.id}`);
+            generalLogger.info(`Number of connected sockets: ${this.io.sockets.size}`);
             generalLogger.info(`Total clients connected to room '${roomName}': ${clientCount}`);
 
             if(updatedPoll) {
-                io.to(pollID).emit('poll_updated', updatedPoll);
+                this.io.to(pollID).emit('poll_updated', updatedPoll);
             }
         } catch (e) {
-            sendError(socket, e);
+            sendError(this.socket, e);
         }        
    }
 
-   const removeParticipant: ClientToServerEvents['remove_participant'] = async ({id}) => {
-        const { pollID } = socket.data;
+   remove_participant = async (params: { id: string }) => {
+        const { pollID } = this.socket.data;
+        const { id } = params;
         generalLogger.debug(`Attempting to remove participant ${id} from poll ${pollID}`);
 
         try {
-            const updatedPoll = await pollService.removeParticipant(pollID, id);
+            const updatedPoll = await this.pollService.removeParticipant(pollID, id);
 
             if (updatedPoll) {
-                io.to(pollID).emit('poll_updated', updatedPoll);
+                this.io.to(pollID).emit('poll_updated', updatedPoll);
             }
 
         } catch (e) {
-            sendError(socket, e);
+            sendError(this.socket, e);
         }
 
    }
 
-   const nominate: ClientToServerEvents["nominate"] = async ({text}) => {
-        const { userID, pollID } = socket.data;
+   nominate = async (params: {text: string}) => {
+        const { userID, pollID } = this.socket.data;
+        const { text } = params;
+
         generalLogger.debug(`Attempting to add nomination for user ${userID} to poll ${pollID}\n${text}`);
 
         try {
-            const updatedPoll = await pollService.addNomination({
+            const updatedPoll = await this.pollService.addNomination({
                 pollID,
                 userID,
                 text
             });
 
-            io.to(pollID).emit('poll_updated', updatedPoll);
+            this.io.to(pollID).emit('poll_updated', updatedPoll);
 
         } catch(e) {
-            sendError(socket, e);
+            sendError(this.socket, e);
         }
 
    }
 
-   const removeNomination: ClientToServerEvents["remove_nomination"] = async ({id}) => {
-        const { pollID } = socket.data;
+   remove_nomination = async (params: {id: string}) => {
+        const { pollID } = this.socket.data;
+        const { id } = params;
+
         generalLogger.debug(`Attempting to remove nomination ${id} from poll ${pollID}`);
 
         try {
-            const updatedPoll = await pollService.removeNomination(pollID, id);
+            const updatedPoll = await this.pollService.removeNomination(pollID, id);
 
-            io.to(pollID).emit("poll_updated", updatedPoll);
+            this.io.to(pollID).emit("poll_updated", updatedPoll);
 
         } catch(e) {
-            sendError(socket, e);
+            sendError(this.socket, e);
         }
 
    }
 
-   const startVote: ClientToServerEvents['start_vote'] = async () => {
-        const { pollID } = socket.data;
+   start_vote = async () => {
+        const { pollID } = this.socket.data;
         generalLogger.debug(`Attempting to start voting for poll: ${pollID}`);
 
         try {
-            const updatedPoll = await pollService.startPoll(pollID);
-            io.to(pollID).emit("poll_updated", updatedPoll);
+            const updatedPoll = await this.pollService.startPoll(pollID);
+            this.io.to(pollID).emit("poll_updated", updatedPoll);
 
         } catch(e) {
-            sendError(socket, e);
+            sendError(this.socket, e);
         }
    }
 
-   const submitRankings: ClientToServerEvents["submit_rankings"] = async ({rankings}) => {
-        const { userID, pollID } = socket.data;
+   submit_rankings = async (params: {rankings: string[]}) => {
+        const { userID, pollID } = this.socket.data;
+        const { rankings } = params;
+
         generalLogger.debug(`Submitting votes for user: ${userID} belonging to pollID: "${pollID}"`);
 
         try {
-            const updatedPoll = await pollService.submitRankings({
+            const updatedPoll = await this.pollService.submitRankings({
                 pollID,
                 userID,
                 rankings
             });
 
-            io.to(pollID).emit("poll_updated", updatedPoll);
+            this.io.to(pollID).emit("poll_updated", updatedPoll);
 
         } catch (e) {
-            sendError(socket, e);
+            sendError(this.socket, e);
         }
-
-
    }
 
-   socket.on('submit_rankings', submitRankings);
-   socket.on('start_vote', startVote);
-   socket.on('remove_participant', removeParticipant);
-   socket.on('nominate', nominate);
-   socket.on('remove_nomination', removeNomination);
-   socket.on('disconnect', handleDisconnect);
 
+}
+export default (io: Namespace<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>,
+    socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>) => {
+
+        const pollHandlers = new PollHandlers(io, socket);
+
+        socket.on('submit_rankings', pollHandlers.submit_rankings);
+        socket.on('start_vote', pollHandlers.start_vote);
+        socket.on('remove_participant', pollHandlers.remove_participant);
+        socket.on('nominate', pollHandlers.nominate);
+        socket.on('remove_nomination', pollHandlers.remove_nomination);
+        socket.on('disconnect', pollHandlers.disconnect);
 }

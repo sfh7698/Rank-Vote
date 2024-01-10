@@ -4,6 +4,7 @@ import { Socket } from "socket.io";
 import { NextFunction } from "../socket.types";
 import { getToken } from "../utils/getToken";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { sendError } from "../utils/errorHandler";
 
 
 export const isAdminEvent = (eventName: string) => {
@@ -17,7 +18,7 @@ export const authAdmin = async (socket: Socket, next: NextFunction) => {
 
     if (process.env.JWT_SECRET === undefined) {
         errorLogger.error("jwt secret not defined");
-        socket.emit("error", "Internal Server Error");
+        sendError(socket, "Internal Server Error");
         return;
     }
 
@@ -30,13 +31,13 @@ export const authAdmin = async (socket: Socket, next: NextFunction) => {
         const poll = await pollService.getPoll(pollID);
 
         if (subject !== poll.adminID) {
-            socket.emit('error', 'Admin privileges required');
+            sendError(socket, 'Admin privileges required');
             return;
         }
         next();
 
     } catch (e) {
-        socket.emit('error', e);
+        sendError(socket, e);
     }
 
 }

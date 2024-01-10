@@ -2,6 +2,7 @@ import { Namespace, Socket } from 'socket.io';
 import { generalLogger } from '../utils/loggers';
 import PollService from '../api/polls/poll.service';
 import { ClientToServerEvents } from './socket.types';
+import { sendError } from './utils/errorHandler';
 
 export default (io: Namespace, socket: Socket) => {
     const pollService = new PollService();
@@ -22,7 +23,7 @@ export default (io: Namespace, socket: Socket) => {
                 io.to(pollID).emit('poll_updated', updatedPoll);
             }
         } catch (e) {
-            socket.emit("error", e);
+            sendError(socket, e);
         }        
    }
 
@@ -38,7 +39,7 @@ export default (io: Namespace, socket: Socket) => {
             }
 
         } catch (e) {
-            socket.emit("error", e);
+            sendError(socket, e);
         }
 
    }
@@ -57,7 +58,7 @@ export default (io: Namespace, socket: Socket) => {
             io.to(pollID).emit('poll_updated', updatedPoll);
 
         } catch(e) {
-            socket.emit('error', e);
+            sendError(socket, e);
         }
 
    }
@@ -72,7 +73,7 @@ export default (io: Namespace, socket: Socket) => {
             io.to(pollID).emit("poll_updated", updatedPoll);
 
         } catch(e) {
-            socket.emit("error", e);
+            sendError(socket, e);
         }
 
    }
@@ -86,7 +87,7 @@ export default (io: Namespace, socket: Socket) => {
             io.to(pollID).emit("poll_updated", updatedPoll);
 
         } catch(e) {
-            socket.emit("error", e);
+            sendError(socket, e);
         }
    }
 
@@ -104,10 +105,7 @@ export default (io: Namespace, socket: Socket) => {
             io.to(pollID).emit("poll_updated", updatedPoll);
 
         } catch (e) {
-            //Create a function in utils with the following and call function in all socket catch blocks
-            if (e instanceof(Error)) {
-                socket.emit("error", e.message);
-            }
+            sendError(socket, e);
         }
 
 

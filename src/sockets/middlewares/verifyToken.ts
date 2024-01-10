@@ -3,6 +3,7 @@ import { generalLogger, errorLogger } from "../../utils/loggers";
 import { Socket } from "socket.io";
 import { NextFunction } from "../socket.types";
 import { getToken } from "../utils/getToken";
+import { BadRequestException, UnknownException } from "../../utils/exceptions";
 
 // (createTokenMiddleware)
 export const verifyToken = (socket: Socket, next: NextFunction) => {
@@ -10,14 +11,14 @@ export const verifyToken = (socket: Socket, next: NextFunction) => {
 
     if(!token) {
         errorLogger.error('No authorization token provided');
-        socket.emit('error', 'No token provided');
+        next(new BadRequestException('No token provided'));
         return;
     }
 
     
     if (process.env.JWT_SECRET === undefined) {
         errorLogger.error("jwt secret not defined");
-        socket.emit("error", "Internal Server Error");
+        next(new UnknownException("Internal Server Error"));
         return;
     }
     

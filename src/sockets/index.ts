@@ -4,6 +4,7 @@ import middlewares from './middlewares';
 import io from '../index';
 import { Socket } from 'socket.io';
 import PollService from '../api/polls/poll.service';
+import { sendError } from './utils/errorHandler';
 
 const onConnection = async(socket: Socket) => {
     const pollService = new PollService();
@@ -31,7 +32,7 @@ const onConnection = async(socket: Socket) => {
 
         io.to(roomName).emit('poll_updated', updatedPoll);
     } catch (e){
-        socket.emit("error", e);
+        sendError(socket, e);
     }
 
     middlewares(io, socket);

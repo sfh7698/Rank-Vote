@@ -1,6 +1,7 @@
 import { Namespace, Socket } from "socket.io";
 import { authAdmin, isAdminEvent } from './admin';
 import { nominateSchema } from '../middlewares/validate';
+import { sendError } from "../utils/errorHandler";
 
 export default (_: Namespace, socket: Socket) => {
     socket.use((packet, next) => {
@@ -21,7 +22,7 @@ export default (_: Namespace, socket: Socket) => {
             const { error } = nominateSchema.validate(data);
 
             if (error) {
-                socket.emit("error", error.details[0].message);
+                sendError(socket, error.details[0].message);
                 return;
             }
         }

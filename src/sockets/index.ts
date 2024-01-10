@@ -5,8 +5,11 @@ import io from '../index';
 import { Socket } from 'socket.io';
 import PollService from '../api/polls/poll.service';
 import { sendError } from './utils/errorHandler';
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "./socket.types";
 
-const onConnection = async(socket: Socket) => {
+
+const onConnection = async(socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>) => {
     const pollService = new PollService();
     const { userID, pollID, name } = socket.data;
 

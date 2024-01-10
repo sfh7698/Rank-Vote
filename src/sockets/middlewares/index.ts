@@ -1,9 +1,13 @@
 import { Namespace, Socket } from "socket.io";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { authAdmin, isAdminEvent } from './admin';
 import { nominateSchema } from '../middlewares/validate';
 import { sendError } from "../utils/errorHandler";
+import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../socket.types";
 
-export default (_: Namespace, socket: Socket) => {
+export default (_: Namespace<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>, 
+    socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>) => {
+        
     socket.use((packet, next) => {
         const eventName = packet[0];
 

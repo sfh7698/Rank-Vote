@@ -4,9 +4,12 @@ import { Socket } from "socket.io";
 import { NextFunction } from "../socket.types";
 import { getToken } from "../utils/getToken";
 import { BadRequestException, UnknownException } from "../../utils/exceptions";
+import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../socket.types";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 // (createTokenMiddleware)
-export const verifyToken = (socket: Socket, next: NextFunction) => {
+export const verifyToken = (socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>, 
+    next: NextFunction) => {
     const token = getToken(socket);
 
     if(!token) {

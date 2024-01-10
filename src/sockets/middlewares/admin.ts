@@ -5,14 +5,16 @@ import { NextFunction } from "../socket.types";
 import { getToken } from "../utils/getToken";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { sendError } from "../utils/errorHandler";
-
+import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../socket.types";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 export const isAdminEvent = (eventName: string) => {
     const adminEvents = ["remove_participant", "remove_nomination", "start_vote"];
     return adminEvents.includes(eventName);
 }
 
-export const authAdmin = async (socket: Socket, next: NextFunction) => {
+export const authAdmin = async (socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>, 
+    next: NextFunction) => {
     const pollService = new PollService();
     const token = getToken(socket);
 

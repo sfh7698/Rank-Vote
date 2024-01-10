@@ -15,8 +15,6 @@ export interface ClientToServerEvents {
     submit_rankings: (params: {rankings: string[]}) => void;
 }
 
-export interface SocketWithAuth {
-    data: RejoinPollFields;
-};
+export interface SocketWithAuth extends RejoinPollFields {};
 
 export type NextFunction = (err?: any) => void;

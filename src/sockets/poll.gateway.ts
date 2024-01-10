@@ -1,10 +1,12 @@
 import { Namespace, Socket } from 'socket.io';
 import { generalLogger } from '../utils/loggers';
 import PollService from '../api/polls/poll.service';
-import { ClientToServerEvents } from './socket.types';
+import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth } from './socket.types';
 import { sendError } from './utils/errorHandler';
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
-export default (io: Namespace, socket: Socket) => {
+export default (io: Namespace<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>,
+    socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>) => {
     const pollService = new PollService();
 
     const handleDisconnect: ClientToServerEvents["disconnect"] = async () => {

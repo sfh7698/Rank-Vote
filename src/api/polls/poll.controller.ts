@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreatePollFields, JoinPollFields, PollResponse, RequestWithAuth, Poll, PollServiceFields } from './poll.types';
+import { CreatePollFields, JoinPollFields, PollResponse, RequestWithAuth, Poll } from './poll.types';
 import PollService from './poll.service';
 
 export default class PollController {

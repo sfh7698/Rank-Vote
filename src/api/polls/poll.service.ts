@@ -7,7 +7,10 @@ import {
     Poll,
     AddParticipantFields,
     AddNominationFields,
-    SubmitRankingsFields} from "./poll.types";
+    SubmitRankingsFields,
+    Rankings,
+    Nominations,
+    Results} from "./poll.types";
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
 import generateToken  from "../../utils/generateToken"
@@ -18,6 +21,31 @@ export default class PollService {
 
     constructor(){
         this.pollRepository = new PollsRepository();
+    }
+
+    private getResults = (rankings: Rankings, nominations: Nominations, votesPerVoter: number): Results => {
+        const scores: { [nominationID: string]: number } = {};
+
+        Object.values(rankings).forEach((userRankings) => {
+            userRankings.forEach((nominationID, n) => {
+                const voteValue = Math.pow(
+                    (votesPerVoter - 0.5 * n) / votesPerVoter,
+                    n + 1
+                );
+
+                scores[nominationID] = (scores[nominationID] ?? 0) + voteValue;
+            });
+        });
+
+        const results = Object.entries(scores).map(([nominationID, score]) => ({
+            nominationID,
+            nominationText: nominations[nominationID].text,
+            score
+        }));
+
+        results.sort((res1, res2) => res2.score - res1.score);
+
+        return results;
     }
 
     createPoll = async (fields: CreatePollFields): Promise<PollServiceFields> => {
@@ -102,5 +130,17 @@ export default class PollService {
         }
 
         return await this.pollRepository.addParticipantRankings(rankingsData);
+    }
+
+    computeResults = async(pollID: string): Promise<Poll> => {
+        const poll = await this.pollRepository.getPoll(pollID);
+
+        const results = this.getResults(poll.rankings, poll.nominations, poll.votesPerVoter);
+
+        return this.pollRepository.addResults(pollID, results);
+    }
+
+    cancelPoll = async(pollID: string): Promise<void> => {
+        await this.pollRepository.deletePoll(pollID);
     }
 }

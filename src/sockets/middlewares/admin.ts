@@ -9,7 +9,7 @@ import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../so
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 export const isAdminEvent = (eventName: string) => {
-    const adminEvents = ["remove_participant", "remove_nomination", "start_vote"];
+    const adminEvents = ["remove_participant", "remove_nomination", "start_vote", "close_poll", "cancel_poll"];
     return adminEvents.includes(eventName);
 }
 

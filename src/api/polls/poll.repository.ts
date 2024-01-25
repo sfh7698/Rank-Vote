@@ -5,10 +5,15 @@ import { AddParticipantData,
         CreatePollData, 
         Poll, 
         AddNominationData,
-        AddParticipantRankingsData } from './poll.types';
+        AddParticipantRankingsData, 
+        Results} from './poll.types';
 
 export default class PollsRepository {
     private readonly ttl = process.env.POLL_DURATION;
+
+    private getKey = (pollID: string) => {
+        return `polls:${pollID}`
+    }
 
     createPoll = async ({votesPerVoter, topic, pollID, userID }: CreatePollData): Promise<Poll> => {
         const initialPoll = {
@@ -18,13 +23,14 @@ export default class PollsRepository {
             participants: {},
             nominations: {},
             rankings: {},
+            results: [],
             adminID: userID,
             hasStarted: false
         }
 
         // generalLogger.info(`Creating new poll: ${JSON.stringify(initialPoll, null, 2)} with TTL ${this.ttl}`);
 
-        const key = `polls:${pollID}`;
+        const key = this.getKey(pollID);
 
         try {
             await redisClient.multi([
@@ -44,7 +50,7 @@ export default class PollsRepository {
     getPoll = async (pollID: string): Promise<Poll> => {
         // generalLogger.info(`Attempting to get poll with: ${pollID}`);
 
-        const key = `polls:${pollID}`;
+        const key = this.getKey(pollID);
 
         try {
             const currentPoll = await redisClient.call('JSON.GET', key, '.') as string;
@@ -64,7 +70,7 @@ export default class PollsRepository {
     addParticipant = async({pollID, userID, name}: AddParticipantData): Promise<Poll> => {
         // generalLogger.info(`Attempting to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
 
-        const key = `polls:${pollID}`;
+        const key = this.getKey(pollID);
         const participantPath = `.participants.${userID}`;
 
         try {
@@ -84,7 +90,7 @@ export default class PollsRepository {
 
     removeParticipant = async(pollID: string, userID: string): Promise<Poll> => {
         // generalLogger.debug(`removing userID: ${userID} from poll: ${pollID}`);
-        const key = `polls:${pollID}`;
+        const key = this.getKey(pollID);
         const participantPath = `.participants.${userID}`;
 
         try {
@@ -101,7 +107,7 @@ export default class PollsRepository {
     addNomination = async({pollID, nominationID, nomination}: AddNominationData): Promise<Poll> => {
         generalLogger.info(`Attempting to add a nomination with nominationID/nomination: ${nominationID}/${nomination.text} to pollID: ${pollID}`);
 
-        const key = `polls:${pollID}`;
+        const key = this.getKey(pollID);
         const nominationPath = `.nominations.${nominationID}`;
 
         try {
@@ -117,7 +123,7 @@ export default class PollsRepository {
     removeNomination = async(pollID: string, nominationID: string): Promise<Poll> => {
         generalLogger.info(`removing nominationID: ${nominationID} from poll: ${pollID}`);
 
-        const key = `polls:${pollID}`;
+        const key = this.getKey(pollID);
         const nominationPath = `.nominations.${nominationID}`;
 
         try {
@@ -133,7 +139,7 @@ export default class PollsRepository {
     startPoll = async(pollID: string): Promise<Poll> => {
         generalLogger.info(`setting hasStarted for poll: ${pollID}`);
 
-        const key = `polls:${pollID}`;
+        const key = this.getKey(pollID);
 
         try {
             await redisClient.call('JSON.SET', key, '.hasStarted', JSON.stringify(true));
@@ -149,7 +155,7 @@ export default class PollsRepository {
     addParticipantRankings = async({ pollID, userID, rankings }: AddParticipantRankingsData): Promise<Poll> => {
         generalLogger.info(`Attempting to add rankings for userID/name: ${userID} to pollID: ${pollID}`, rankings);
 
-        const key = `polls:${pollID}`;
+        const key = this.getKey(pollID);
         const rankingsPath = `.rankings.${userID}`;
 
         try {
@@ -163,5 +169,37 @@ export default class PollsRepository {
 
         }
 
+    }
+
+    addResults = async(pollID: string, results: Results): Promise<Poll> => {
+        const resultsString = JSON.stringify(results);
+        generalLogger.debug(`attempting to add results to pollID: ${pollID}`, resultsString);
+
+        const key = this.getKey(pollID);
+        const resultsPath = `.results`;
+
+        try {
+            await redisClient.call('JSON.SET', key, resultsPath, resultsString);
+
+            return this.getPoll(pollID);
+
+        } catch(e){
+            errorLogger.error(e);
+            throw new UnknownException(`Failed to add add results for pollID: ${pollID}`);
+        }
+    }
+
+    deletePoll = async(pollID: string): Promise<void> => {
+        const key = this.getKey(pollID);
+
+        generalLogger.info(`deleting poll: ${pollID}`);
+
+        try {
+            await redisClient.call('JSON.DEL', key);
+
+        } catch(e) {
+            errorLogger.error(e);
+            throw new UnknownException(`Failed to delete poll: ${pollID}`);
+        }
     }
 }

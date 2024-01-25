@@ -2,22 +2,28 @@ import { Request } from "express";
 
 export type Participants = {
     [particpantID: string]: string
-}
+};
 
 export type Nomination = {
     userID: string,
     text: string
-}
+};
 
 export type NominationID = string;
 
 export type Nominations = {
     [nominationID: NominationID]: Nomination
-}
+};
 
 export type Rankings = {
     [userID: string]: NominationID[];
-}
+};
+
+export type Results = Array<{
+    nominationID: NominationID,
+    nominationText: string,
+    score: number
+}>;
 
 export type Poll = {
     id: string;
@@ -27,9 +33,9 @@ export type Poll = {
     adminID: string;
     nominations: Nominations;
     rankings: Rankings
-    // results: Results;
+    results: Results;
     hasStarted: boolean;
-}
+};
 
 
 /*
@@ -67,7 +73,7 @@ export type AddParticipantData = RejoinPollFields;
 export type AddNominationData = Pick<JoinPollFields, "pollID"> & {
     nominationID: string,
     nomination: Nomination
-}
+};
 
 export type AddParticipantRankingsData = SubmitRankingsFields;
 

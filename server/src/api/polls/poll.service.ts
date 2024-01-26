@@ -4,13 +4,10 @@ import {
     JoinPollFields, 
     RejoinPollFields, 
     PollServiceFields,
-    Poll,
     AddParticipantFields,
     AddNominationFields,
-    SubmitRankingsFields,
-    Rankings,
-    Nominations,
-    Results} from "./poll.types";
+    SubmitRankingsFields} from "./types";
+import { Poll, Rankings, Nominations, Results } from "shared";
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
 import generateToken  from "../../utils/generateToken"

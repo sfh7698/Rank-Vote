@@ -2,11 +2,10 @@ import redisClient from '../../redis/redis';
 import { UnknownException } from '../../utils/exceptions';
 import { errorLogger, generalLogger } from '../../utils/loggers';
 import { AddParticipantData, 
-        CreatePollData, 
-        Poll, 
+        CreatePollData,
         AddNominationData,
-        AddParticipantRankingsData, 
-        Results} from './poll.types';
+        AddParticipantRankingsData} from './types';
+import { Poll, Results } from 'shared';
 
 export default class PollsRepository {
     private readonly ttl = process.env.POLL_DURATION;

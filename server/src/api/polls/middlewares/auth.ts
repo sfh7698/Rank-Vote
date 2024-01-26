@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { errorLogger, generalLogger } from '../../../utils/loggers';
-import { RequestWithAuth } from '../poll.types';
+import { RequestWithAuth } from '../types';
 import { BadRequestException, UnauthorizedException } from '../../../utils/exceptions';
 
 export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFunction) => {

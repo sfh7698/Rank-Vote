@@ -1,4 +1,5 @@
-import { Poll, RejoinPollFields } from "../api/polls/poll.types";
+import { RejoinPollFields } from "../api/polls/types";
+import { Poll } from "shared";
 
 export interface ServerToClientEvents {
     poll_updated: (poll: Poll) => void;

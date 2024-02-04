@@ -19,19 +19,18 @@ export default function Home({navigator}: Route["props"]) {
 
     return (
         <Page>
-            <div className="home">
+            <div className="flex flex-col items-center justify-center h-full">
                 <h1> Rank Vote </h1>
-                {/*
-                Button component(s) gives error when adding text to button so ignoring after verifying button functionality works correctly
-                Has something to do with Button type declaration in @types/react-onsenui
-                @ts-ignore */}
-                <Button onClick={()=>goToComponent(navigator, "Create", CreatePoll)} modifier="outline">
-                    Create a Poll
-                </Button>
-                {/* @ts-ignore */}
-                <Button onClick={()=>goToComponent(navigator, "Join", JoinPoll)} modifier="outline">
-                    Join a Poll
-                </Button>
+                <div className="flex flex-col space-y-4">
+                    {/* @ts-ignore */}
+                    <Button onClick={()=>goToComponent(navigator, "Create", CreatePoll)} modifier="outline">
+                        Create a Poll
+                    </Button>
+                    {/* @ts-ignore */}
+                    <Button className="text-center" onClick={()=>goToComponent(navigator, "Join", JoinPoll)} modifier="outline">
+                        Join a Poll
+                    </Button>
+                </div>
             </div>
         </Page>
     )

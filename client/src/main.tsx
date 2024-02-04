@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-// import './index.css'
-import './assets/global.css'
+import './index.css'
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
 

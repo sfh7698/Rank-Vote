@@ -1,3 +1,1 @@
 # Rank-Vote
-## Note on `Button` component from `react-onsenUI`: 
-Button components gives error when adding text to button so I am ignoring that error using @ts-ignore directive before every Button after verifying button functionality works correctly. It has something to do with Button type declaration from `@types/react-onsenui`. When adding text to the button TS gives error that no overloads match this component, however, the button is rendered correctly with the appropriate modifers and the `onClick` event handlers work accordingly as well.

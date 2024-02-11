@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.1.0",
     "onsenui": "^2.12.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-onsenui": "^1.13.3"
+    "react-onsenui": "^1.13.3",
+    "react-redux": "^9.1.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

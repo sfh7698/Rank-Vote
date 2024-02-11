@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import cors from 'cors';
+import cors, {CorsOptions} from 'cors';
 import morgan from 'morgan';
 import fs from 'fs';
 import { filename } from './utils/loggers';
@@ -10,8 +10,9 @@ const app: Express = express();
 
 const logStream = fs.createWriteStream(filename, {flags: 'a'});
 
-const corsOptions = {
-  origin: process.env.CLIENT_DOMAIN || 'http://localhost:3000'
+const corsOptions: CorsOptions = {
+  origin: process.env.CLIENT_DOMAIN || 'http://localhost:5173',
+  exposedHeaders: ['Authorization']
 };
 
 const stream = process.env.NODE_ENV === 'development' ? process.stdout : logStream;

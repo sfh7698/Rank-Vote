@@ -1,7 +1,7 @@
 import { Page, Navigator } from "react-onsenui";
-import { Button } from "../../components";
-import { Route } from "../../types";
-import { CreatePoll, JoinPoll } from "../index";
+import { Button } from "../components";
+import { Route } from "../types";
+import { CreatePoll, JoinPoll } from "./index";
 
 export default function Home({navigator}: Route["props"]) {
 
@@ -22,7 +22,7 @@ export default function Home({navigator}: Route["props"]) {
         <Page>
             <div className="flex flex-col items-center justify-center h-full">
                 <h1> Rank Vote </h1>
-                <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4 mt-16">
                     <Button onClick={()=>goToComponent(navigator, "Create", CreatePoll)} modifier="outline">
                         Create a Poll
                     </Button>

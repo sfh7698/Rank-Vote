@@ -4,7 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
-import { store } from './store.ts';
+import { store } from './app/store.ts';
 import { Provider } from 'react-redux';
 
 

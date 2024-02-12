@@ -15,7 +15,7 @@ type createResponse = {
 
 export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({ 
-        baseUrl: 'http://localhost:8080/api/polls',
+        baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:8080/api/polls',
         prepareHeaders: (headers, {getState}) => {
             const token = (getState() as RootState).auth.accessToken;
             if (token) {

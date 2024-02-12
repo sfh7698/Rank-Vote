@@ -1,4 +1,4 @@
-import { useCreatePollMutation } from "../slices/apiSlice";
+import { useCreatePollMutation } from "../app/slices/apiSlice";
 import { CountSelector, Button } from "../components";
 import { Page } from "react-onsenui";
 import { Route } from "../types";

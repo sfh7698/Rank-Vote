@@ -1,16 +1,20 @@
 import { useCreatePollMutation } from "../app/slices/apiSlice";
 import { CountSelector, Button } from "../components";
+import Loader from "./Loader";
+import WaitingRoom from "./WaitingRoom";
 import { Page } from "react-onsenui";
-import { Route } from "../types";
+import { Route } from "../utils/types";
 import { useState } from "react";
 import { z } from "zod";
+import goToPage from "../utils/goToPage";
 
 
 export default function CreatePoll({navigator}: Route["props"]) {
     const [pollTopic, setPollTopic] = useState('');
     const [votes, setVotes] = useState(3);
     const [name, setName] = useState('');
-    const [createPoll] = useCreatePollMutation();
+    const [showFab, setShowFab] = useState(true);
+    const [createPoll, {isLoading}] = useCreatePollMutation();
 
     const formFieldsSchema = z.object({
         topic: z.string().min(1).max(100),
@@ -30,7 +34,9 @@ export default function CreatePoll({navigator}: Route["props"]) {
         e.preventDefault();
         try {
             if(parsedFields.success){
+                setShowFab(false);
                 await createPoll(parsedFields.data).unwrap();
+                goToPage(navigator, "Waiting", WaitingRoom);
             }
         } catch (e){
             console.log(e);
@@ -39,6 +45,7 @@ export default function CreatePoll({navigator}: Route["props"]) {
     
     return (
         <Page>
+            {isLoading && <Loader />}
             <div className="flex flex-col items-stretch mx-auto max-w-sm py-36 h-screen w-full">
                 <div className="flex flex-col items-center mb-4">
                     <label htmlFor="pollTopic" className="text-xl text-center"> Enter Poll Topic</label>
@@ -55,7 +62,9 @@ export default function CreatePoll({navigator}: Route["props"]) {
                     <h3 className="text-center"> Votes Per Participant </h3>
                     <CountSelector 
                     onChange={setVotes}
-                    initialVotes={votes} />
+                    initialVotes={votes}
+                    showFab={showFab}
+                    />
                 </div>
                 <div className="flex flex-col items-center mb-4">
                     <label htmlFor="name" className="text-xl text-center"> Enter Name </label>

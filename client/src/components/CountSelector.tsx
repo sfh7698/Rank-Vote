@@ -1,13 +1,15 @@
 import { Icon } from "react-onsenui";
 import { Fab } from ".";
+// import { Button } from ".";
 import { useState } from "react";
 
 interface CountSelectorProps {
     onChange?: (val: number) => void,
-    initialVotes: number
+    initialVotes: number,
+    showFab: boolean
 }
 
-export default function CountSelector({onChange, initialVotes}: CountSelectorProps) {
+export default function CountSelector({onChange, initialVotes, showFab}: CountSelectorProps) {
     const minVotes = 1;
     const maxVotes = 5;
     const [count, setCount] = useState(initialVotes);
@@ -24,19 +26,23 @@ export default function CountSelector({onChange, initialVotes}: CountSelectorPro
 
     return (
         <div className="flex justify-between items-center w-48 mx-auto my-4">
-            <Fab 
+            {showFab && <Fab 
                 modifier="mini"
                 onClick={decrement}
-                disabled={count <= minVotes}>
+                disabled={count <= minVotes}
+                className="btn-round"
+            >
                 <Icon icon="fa-minus"></Icon>
-            </Fab>
+            </Fab>}
             <span className="text-2xl font-bold">{count}</span>
-            <Fab 
+            {showFab && <Fab 
                 modifier="mini"
                 onClick={increment}
-                disabled={count >= maxVotes}>
+                disabled={count >= maxVotes}
+                className="btn-round"
+            >
                 <Icon icon='fa-plus'></Icon>
-            </Fab>
+            </Fab>}
         </div>
     )
 

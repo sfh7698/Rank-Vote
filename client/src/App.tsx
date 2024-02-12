@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigator } from "react-onsenui";
 import { Home } from "./pages";
-import { Route } from "./types";
+import { Route } from "./utils/types";
 
 function App() {
 

@@ -7,6 +7,8 @@ import { Route } from "../utils/types";
 import { useState } from "react";
 import { z } from "zod";
 import goToPage from "../utils/goToPage";
+import { Toast } from "../components";
+import { Exception } from "shared";
 
 
 export default function CreatePoll({navigator}: Route["props"]) {
@@ -14,6 +16,9 @@ export default function CreatePoll({navigator}: Route["props"]) {
     const [votes, setVotes] = useState(3);
     const [name, setName] = useState('');
     const [showFab, setShowFab] = useState(true);
+    const [apiError, setApiError] = useState('');
+    const [showError, setShowError] = useState(false);
+    
     const [createPoll, {isLoading}] = useCreatePollMutation();
 
     const formFieldsSchema = z.object({
@@ -29,23 +34,43 @@ export default function CreatePoll({navigator}: Route["props"]) {
     }
 
     const parsedFields = formFieldsSchema.safeParse(formFields);
+    console.log(parsedFields);
 
     const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         e.preventDefault();
         try {
-            if(parsedFields.success){
-                setShowFab(false);
-                await createPoll(parsedFields.data).unwrap();
-                goToPage(navigator, "Waiting", WaitingRoom);
+            const isValid = parsedFields.success;
+            if(!isValid){
+                const errors = parsedFields.error.flatten().fieldErrors;
+                Object.entries(errors).forEach(([key, value]) => {
+                    setApiError(`Invalid ${key}: ${value[0]}`);
+                    setShowError(true);
+                })
+                return
             }
+
+            setShowFab(false);
+            await createPoll(parsedFields.data).unwrap();
+            goToPage(navigator, "Waiting", WaitingRoom);
+
         } catch (e){
-            console.log(e);
+            setShowFab(true);
+
+            const exception = e as Exception;
+            setShowError(true);
+            if (exception.getStatus() === 500) {
+                setApiError('Unknown Error Occurred');
+                return
+            }
+
+            setApiError(exception.message);
         }
     }
     
     return (
         <Page>
             {isLoading && <Loader />}
+            <Toast isOpen={showError}>{apiError}</Toast>
             <div className="flex flex-col items-stretch mx-auto max-w-sm py-36 h-screen w-full">
                 <div className="flex flex-col items-center mb-4">
                     <label htmlFor="pollTopic" className="text-xl text-center"> Enter Poll Topic</label>

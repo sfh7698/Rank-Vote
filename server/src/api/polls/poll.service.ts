@@ -11,7 +11,7 @@ import { Poll, Rankings, Nominations, Results } from "shared";
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
 import generateToken  from "../../utils/generateToken"
-import { UnauthorizedException } from "../../utils/exceptions";
+import { UnauthorizedException } from "shared";
 
 export default class PollService {
     private readonly pollRepository: PollsRepository;

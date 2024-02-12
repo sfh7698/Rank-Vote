@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { errorLogger, generalLogger } from '../../../utils/loggers';
 import { RequestWithAuth } from '../types';
-import { BadRequestException, UnauthorizedException } from '../../../utils/exceptions';
+import { BadRequestException, UnauthorizedException } from 'shared';
 
 export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFunction) => {
     generalLogger.info(`Checking for auth token on request body ${req.body}`);

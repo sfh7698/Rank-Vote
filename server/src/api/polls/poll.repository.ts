@@ -1,5 +1,5 @@
 import redisClient from '../../redis/redis';
-import { UnknownException } from '../../utils/exceptions';
+import { UnknownException } from 'shared';
 import { errorLogger, generalLogger } from '../../utils/loggers';
 import { AddParticipantData, 
         CreatePollData,

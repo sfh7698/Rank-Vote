@@ -34,13 +34,11 @@ export default function CreatePoll({navigator}: Route["props"]) {
     }
 
     const parsedFields = formFieldsSchema.safeParse(formFields);
-    console.log(parsedFields);
 
     const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         e.preventDefault();
         try {
-            const isValid = parsedFields.success;
-            if(!isValid){
+            if(!parsedFields.success){
                 const errors = parsedFields.error.flatten().fieldErrors;
                 Object.entries(errors).forEach(([key, value]) => {
                     setApiError(`Invalid ${key}: ${value[0]}`);
@@ -55,22 +53,29 @@ export default function CreatePoll({navigator}: Route["props"]) {
 
         } catch (e){
             setShowFab(true);
-
             const exception = e as Exception;
-            setShowError(true);
-            if (exception.getStatus() === 500) {
-                setApiError('Unknown Error Occurred');
-                return
+
+            if (exception.message === undefined) {
+                setApiError("Unknown Error Occurred");
+            } else {
+                setApiError(exception.message);
             }
 
-            setApiError(exception.message);
+            setShowError(true);
         }
     }
     
     return (
         <Page>
             {isLoading && <Loader />}
-            <Toast isOpen={showError}>{apiError}</Toast>
+            <Toast isOpen={showError} animation={"fall"} animationOptions={{duration: 0.3, timing: 'ease-in'}} >
+                <div className="flex flex-row items-center justify-between">
+                    {apiError}
+                    <Button modifier="quiet" onClick={()=>setShowError(false)}>
+                        Dismiss
+                    </Button>
+                </div>
+            </Toast>
             <div className="flex flex-col items-stretch mx-auto max-w-sm py-36 h-screen w-full">
                 <div className="flex flex-col items-center mb-4">
                     <label htmlFor="pollTopic" className="text-xl text-center"> Enter Poll Topic</label>

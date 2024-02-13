@@ -8,9 +8,14 @@ type createPollValues = {
     name: string
 }
 
-type createResponse = {
+type PollResponse = {
     poll: Poll,
     token: string | null | undefined
+}
+
+type joinPollValues = {
+    pollID: string,
+    name: string
 }
 
 export const apiSlice = createApi({
@@ -26,7 +31,7 @@ export const apiSlice = createApi({
         
     }),
     endpoints: (builder) => ({
-        createPoll: builder.mutation<createResponse, createPollValues>({
+        createPoll: builder.mutation<PollResponse, createPollValues>({
             query: (values) => ({
                 url: '',
                 method: 'POST',
@@ -40,9 +45,23 @@ export const apiSlice = createApi({
                     token
                 }
             }
+        }),
+        joinPoll: builder.mutation<PollResponse, joinPollValues>({
+            query: (values) => ({
+                url: '/join',
+                method: 'POST',
+                body: values
+            }),
+            transformResponse: (response: {poll: Poll}, meta, _) => {
+                const token = meta?.response?.headers.get("Authorization");
+                return {
+                    poll: response.poll,
+                    token
+                }
+            }
         })
     })
 
 })
 
-export const {useCreatePollMutation} = apiSlice;
+export const {useCreatePollMutation, useJoinPollMutation} = apiSlice;

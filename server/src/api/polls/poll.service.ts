@@ -11,7 +11,7 @@ import { Poll, Rankings, Nominations, Results } from "shared";
 import PollsRepository from "./poll.repository";
 import { generalLogger } from "../../utils/loggers";
 import generateToken  from "../../utils/generateToken"
-import { UnauthorizedException } from "shared";
+import { UnauthorizedException } from "../../utils/exceptions";
 
 export default class PollService {
     private readonly pollRepository: PollsRepository;
@@ -61,12 +61,16 @@ export default class PollService {
         };
     };
 
-    joinPoll = async (fields: JoinPollFields): Promise<PollServiceFields> => {
+    joinPoll = async (fields: JoinPollFields): Promise<PollServiceFields | null> => {
         const userID = createUserID();
 
         // generalLogger.info(`Fetching poll with ID: ${fields.pollID} for user with ID: ${userID}`);
 
         const joinedPoll = await this.pollRepository.getPoll(fields.pollID);
+
+        if(joinedPoll === null) {
+            return null;
+        }
 
         // generalLogger.info(`Creating token string for pollID: ${joinedPoll.id} and userID: ${userID}`);
 

@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Exception } from "shared";
+import { Exception } from "../../utils/exceptions";
 import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../socket.types";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 

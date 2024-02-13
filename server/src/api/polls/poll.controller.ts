@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { CreatePollFields, JoinPollFields, PollResponse, RequestWithAuth } from './types';
 import { Poll } from 'shared';
 import PollService from './poll.service';
+import { BadRequestException } from "../../utils/exceptions";
 
 export default class PollController {
 
@@ -24,9 +25,15 @@ export default class PollController {
         
     };
 
-    joinPoll = async (req: Request<{}, {}, JoinPollFields>, res: Response<PollResponse>) => {
+    joinPoll = async (req: Request<{}, {}, JoinPollFields>, res: Response<PollResponse>, next: NextFunction) => {
         const fields = req.body;
         const result = await this.pollService.joinPoll(fields);
+
+        if(result === null) {
+            next(new BadRequestException("Invalid Poll ID"));
+            return
+        }
+
         this.setAuthHeader(res, result.accessToken);
 
         res.status(201).json({poll: result.poll});

@@ -9,3 +9,10 @@ export type Route = {
   }
     component: (props: Route["props"]) => React.JSX.Element;
   }
+
+  export type ApiError = {
+    status: number,
+    data: {
+      message: string
+    }
+  }

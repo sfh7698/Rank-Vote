@@ -16,6 +16,12 @@ const authSlice = createSlice({
                 state.accessToken = payload.token as string;
             }
         )
+        builder.addMatcher(
+            apiSlice.endpoints.joinPoll.matchFulfilled,
+            (state, {payload}) => {
+                state.accessToken = payload.token as string;
+            }
+        )
     }
 })
 

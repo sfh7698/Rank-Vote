@@ -26,6 +26,12 @@ export const pollSlice = createSlice({
             (state, {payload}) => {
                 state.poll = payload.poll
             }
+        ),
+        builder.addMatcher(
+            apiSlice.endpoints.joinPoll.matchFulfilled,
+            (state, {payload}) => {
+                state.poll = payload.poll;
+            }
         )
     }
 });

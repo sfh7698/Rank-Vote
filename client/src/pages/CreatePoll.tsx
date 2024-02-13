@@ -7,7 +7,7 @@ import { Route } from "../utils/types";
 import { useState } from "react";
 import { z } from "zod";
 import goToPage from "../utils/goToPage";
-import { Exception } from "shared";
+import { isApiError } from "../utils/isApiError";
 
 
 export default function CreatePoll({navigator}: Route["props"]) {
@@ -52,12 +52,10 @@ export default function CreatePoll({navigator}: Route["props"]) {
 
         } catch (e){
             setShowFab(true);
-            const exception = e as Exception;
-
-            if (exception.message === undefined) {
-                setApiError("Unknown Error Occurred");
+            if(isApiError(e)) {
+                setApiError(e.data.message);
             } else {
-                setApiError(exception.message);
+                setApiError("Unknown Error Occured");
             }
 
             setShowError(true);

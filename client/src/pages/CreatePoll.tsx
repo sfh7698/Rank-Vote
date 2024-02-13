@@ -1,5 +1,5 @@
 import { useCreatePollMutation } from "../app/slices/apiSlice";
-import { CountSelector, Button } from "../components";
+import { CountSelector, Button, ErrorDisplay } from "../components";
 import Loader from "./Loader";
 import WaitingRoom from "./WaitingRoom";
 import { Page } from "react-onsenui";
@@ -7,7 +7,6 @@ import { Route } from "../utils/types";
 import { useState } from "react";
 import { z } from "zod";
 import goToPage from "../utils/goToPage";
-import { Toast } from "../components";
 import { Exception } from "shared";
 
 
@@ -68,14 +67,7 @@ export default function CreatePoll({navigator}: Route["props"]) {
     return (
         <Page>
             {isLoading && <Loader />}
-            <Toast isOpen={showError} animation={"fall"} animationOptions={{duration: 0.3, timing: 'ease-in'}} >
-                <div className="flex flex-row items-center justify-between">
-                    {apiError}
-                    <Button modifier="quiet" onClick={()=>setShowError(false)}>
-                        Dismiss
-                    </Button>
-                </div>
-            </Toast>
+            <ErrorDisplay setShowError={setShowError} showError={showError} error={apiError} />
             <div className="flex flex-col items-stretch mx-auto max-w-sm py-36 h-screen w-full">
                 <div className="flex flex-col items-center mb-4">
                     <label htmlFor="pollTopic" className="text-xl text-center"> Enter Poll Topic</label>

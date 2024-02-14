@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { Poll } from "shared";
+import { FetchBaseQueryMeta } from "@reduxjs/toolkit/query/react";
 
 type createPollValues = {
     topic: string,
@@ -16,6 +17,14 @@ type PollResponse = {
 type joinPollValues = {
     pollID: string,
     name: string
+}
+
+function getAuthHeader(response: {poll: Poll}, meta: FetchBaseQueryMeta, _: createPollValues | joinPollValues) {
+    const token = meta?.response?.headers.get("Authorization");
+        return {
+            poll: response.poll,
+            token
+        }
 }
 
 export const apiSlice = createApi({
@@ -38,13 +47,7 @@ export const apiSlice = createApi({
                 body: values,
                 
             }),
-            transformResponse: (response: {poll: Poll}, meta, _) => {
-                const token = meta?.response?.headers.get("Authorization");
-                return {
-                    poll: response.poll,
-                    token
-                }
-            }
+            transformResponse: getAuthHeader
         }),
         joinPoll: builder.mutation<PollResponse, joinPollValues>({
             query: (values) => ({
@@ -52,13 +55,7 @@ export const apiSlice = createApi({
                 method: 'POST',
                 body: values
             }),
-            transformResponse: (response: {poll: Poll}, meta, _) => {
-                const token = meta?.response?.headers.get("Authorization");
-                return {
-                    poll: response.poll,
-                    token
-                }
-            }
+            transformResponse: getAuthHeader
         })
     })
 

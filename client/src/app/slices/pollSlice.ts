@@ -38,6 +38,6 @@ export const pollSlice = createSlice({
 
 export const { setPoll } = pollSlice.actions;
 
-export const selectPoll = (state: RootState) => state.poll;
+export const selectPoll = (state: RootState) => state.poll.poll;
 
 export default pollSlice.reducer;

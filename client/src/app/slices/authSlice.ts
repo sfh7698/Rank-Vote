@@ -1,5 +1,7 @@
+import { RootState } from "../store";
 import { apiSlice } from "./apiSlice";
 import { createSlice } from "@reduxjs/toolkit/react";
+import { JwtPayload, jwtDecode } from "jwt-decode";
 
 type authState = {
     accessToken: string | null
@@ -23,6 +25,24 @@ const authSlice = createSlice({
             }
         )
     }
-})
+});
+
+export const selectUserFromToken = (state: RootState) => {
+    const token = state.auth.accessToken;
+
+    if (!token) {
+        return null
+    }
+
+    interface JWTPayloadWithName extends JwtPayload {
+        name: string
+    }
+
+    const payload = jwtDecode<JWTPayloadWithName>(token);
+    return {
+        id: payload.sub,
+        name: payload.name
+    }
+}
 
 export default authSlice.reducer;

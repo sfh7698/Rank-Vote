@@ -7,7 +7,7 @@ import { useJoinPollMutation } from "../app/slices/apiSlice";
 import Loader from "./Loader";
 import goToPage from "../utils/goToPage";
 import WaitingRoom from "./WaitingRoom";
-import { isApiError } from "../utils/isApiError";
+import getErrorMessage from "../utils/getErrorMessage";
 
 export default function JoinPoll({navigator}: Route["props"]) {
     const [pollID, setPollID] = useState('');
@@ -31,26 +31,17 @@ export default function JoinPoll({navigator}: Route["props"]) {
 
     const handleJoinPoll = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         e.preventDefault();
-        try {
-            if(!parsedFields.success) {
-                const errors = parsedFields.error.flatten().fieldErrors;
-                Object.entries(errors).forEach(([key, value]) => {
-                    setApiError(`Invalid ${key}: ${value[0]}`);
-                    setShowError(true);
-                })
-                return
-            }
 
+        if(!parsedFields.success){
+            return
+        }
+
+        try {
             await joinPoll(parsedFields.data).unwrap();
             goToPage(navigator, "Waiting", WaitingRoom);
 
         } catch(e) {
-            if(isApiError(e)) {
-                setApiError(e.data.message);
-            } else {
-                setApiError("Unknown Error Occured");
-            }
-
+            setApiError(getErrorMessage(e));
             setShowError(true);
         }
     }

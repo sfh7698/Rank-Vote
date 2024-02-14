@@ -7,7 +7,7 @@ import { Route } from "../utils/types";
 import { useState } from "react";
 import { z } from "zod";
 import goToPage from "../utils/goToPage";
-import { isApiError } from "../utils/isApiError";
+import getErrorMessage from "../utils/getErrorMessage";
 
 
 export default function CreatePoll({navigator}: Route["props"]) {
@@ -36,28 +36,18 @@ export default function CreatePoll({navigator}: Route["props"]) {
 
     const handleSubmit = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         e.preventDefault();
-        try {
-            if(!parsedFields.success){
-                const errors = parsedFields.error.flatten().fieldErrors;
-                Object.entries(errors).forEach(([key, value]) => {
-                    setApiError(`Invalid ${key}: ${value[0]}`);
-                    setShowError(true);
-                })
-                return
-            }
+        if(!parsedFields.success){
+            return
+        }
 
+        try {
             setShowFab(false);
             await createPoll(parsedFields.data).unwrap();
             goToPage(navigator, "Waiting", WaitingRoom);
 
         } catch (e){
             setShowFab(true);
-            if(isApiError(e)) {
-                setApiError(e.data.message);
-            } else {
-                setApiError("Unknown Error Occured");
-            }
-
+            setApiError(getErrorMessage(e));
             setShowError(true);
         }
     }

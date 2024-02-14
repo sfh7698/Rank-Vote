@@ -2,6 +2,7 @@ import { RootState } from "../store";
 import { apiSlice } from "./apiSlice";
 import { createSlice } from "@reduxjs/toolkit/react";
 import { JwtPayload, jwtDecode } from "jwt-decode";
+import { isAnyOf } from "@reduxjs/toolkit/react";
 
 type authState = {
     accessToken: string | null
@@ -13,13 +14,7 @@ const authSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addMatcher(
-            apiSlice.endpoints.createPoll.matchFulfilled,
-            (state, {payload}) => {
-                state.accessToken = payload.token as string;
-            }
-        )
-        builder.addMatcher(
-            apiSlice.endpoints.joinPoll.matchFulfilled,
+            isAnyOf(apiSlice.endpoints.createPoll.matchFulfilled, apiSlice.endpoints.joinPoll.matchFulfilled),
             (state, {payload}) => {
                 state.accessToken = payload.token as string;
             }

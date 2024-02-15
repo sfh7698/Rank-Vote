@@ -4,7 +4,6 @@ import { Poll } from "shared";
 export interface ServerToClientEvents {
     poll_updated: (poll: Poll) => void;
     error: (params: {type: string, message: string} | string) => void;
-    connect_error: (error: Error) => void;
     poll_cancelled: () => void;
 }
 

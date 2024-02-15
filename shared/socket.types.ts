@@ -1,5 +1,4 @@
-import { RejoinPollFields } from "../api/polls/types";
-import { Poll } from "shared";
+import { Poll } from "./poll.types";
 
 export interface ServerToClientEvents {
     poll_updated: (poll: Poll) => void;
@@ -17,7 +16,3 @@ export interface ClientToServerEvents {
     close_poll: () => void;
     cancel_poll: () => void;
 }
-
-export interface SocketWithAuth extends RejoinPollFields {};
-
-export type NextFunction = (err?: any) => void;

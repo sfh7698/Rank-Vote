@@ -1,6 +1,7 @@
 import { Socket } from "socket.io";
 import { Exception } from "../../utils/exceptions";
-import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../socket.types";
+import { SocketWithAuth} from "../types";
+import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 export const sendError = (socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>,

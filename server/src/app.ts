@@ -10,7 +10,7 @@ const app: Express = express();
 
 const logStream = fs.createWriteStream(filename, {flags: 'a'});
 
-const corsOptions: CorsOptions = {
+export const corsOptions: CorsOptions = {
   origin: process.env.CLIENT_DOMAIN || 'http://localhost:5173',
   exposedHeaders: ['Authorization']
 };

@@ -25,7 +25,6 @@ export const socketSlice = apiSlice.injectEndpoints({
 
                     
                     socket.on("poll_updated", (poll) =>{
-                        console.log(poll);
                         updateCachedData(() => {
                             return poll
                         })

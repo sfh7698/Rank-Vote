@@ -1,13 +1,10 @@
 import { useCreatePollMutation } from "../app/slices/apiSlice";
 import { CountSelector, Button, ErrorDisplay } from "../components";
-import Loader from "./Loader";
-import WaitingRoom from "./WaitingRoom";
+import {Loader, WaitingRoom} from ".";
 import { Page } from "react-onsenui";
-import { Route } from "../utils/types";
+import { Route, goToPage, getErrorMessage } from "../utils";
 import { useState } from "react";
 import { z } from "zod";
-import goToPage from "../utils/goToPage";
-import getErrorMessage from "../utils/getErrorMessage";
 
 
 export default function CreatePoll({navigator}: Route["props"]) {

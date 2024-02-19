@@ -1,8 +1,6 @@
-import { RootState } from "../store";
 import { apiSlice } from "./apiSlice";
-import { createSlice } from "@reduxjs/toolkit/react";
+import { createSlice, PayloadAction, isAnyOf, createSelector } from "@reduxjs/toolkit/react";
 import { JwtPayload, jwtDecode } from "jwt-decode";
-import { isAnyOf } from "@reduxjs/toolkit/react";
 
 type authState = {
     accessToken: string | null
@@ -11,7 +9,11 @@ type authState = {
 const authSlice = createSlice({
     name: 'auth',
     initialState: {accessToken: null} as authState,
-    reducers: {},
+    reducers: {
+        setToken: (state, action: PayloadAction<string>) => {
+            state.accessToken = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder.addMatcher(
             isAnyOf(apiSlice.endpoints.createPoll.matchFulfilled, apiSlice.endpoints.joinPoll.matchFulfilled),
@@ -22,11 +24,11 @@ const authSlice = createSlice({
     }
 });
 
-export const selectUserFromToken = (state: RootState) => {
-    const token = state.auth.accessToken;
+export const { setToken } = authSlice.actions;
 
+export const selectPayloadFromToken = createSelector([(state) => state.auth.accessToken], (token) => {
     if (!token) {
-        return null
+        return token;
     }
 
     interface JWTPayloadWithName extends JwtPayload {
@@ -36,8 +38,8 @@ export const selectUserFromToken = (state: RootState) => {
     const payload = jwtDecode<JWTPayloadWithName>(token);
     return {
         id: payload.sub,
-        name: payload.name
+        ...payload
     }
-}
+})
 
 export default authSlice.reducer;

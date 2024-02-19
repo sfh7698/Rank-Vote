@@ -1,7 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, FetchBaseQueryMeta } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { Poll } from "shared";
-import { FetchBaseQueryMeta } from "@reduxjs/toolkit/query/react";
 
 type createPollValues = {
     topic: string,

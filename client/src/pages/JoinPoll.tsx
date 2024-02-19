@@ -1,13 +1,10 @@
 import { Page } from "react-onsenui"
 import { Button, ErrorDisplay } from "../components"
-import { Route } from "../utils/types"
+import { Route, goToPage, getErrorMessage } from "../utils"
 import { useState } from "react"
 import {z} from "zod";
 import { useJoinPollMutation } from "../app/slices/apiSlice";
-import Loader from "./Loader";
-import goToPage from "../utils/goToPage";
-import WaitingRoom from "./WaitingRoom";
-import getErrorMessage from "../utils/getErrorMessage";
+import {Loader, WaitingRoom} from ".";
 
 export default function JoinPoll({navigator}: Route["props"]) {
     const [pollID, setPollID] = useState('');

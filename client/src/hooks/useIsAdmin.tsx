@@ -1,11 +1,11 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "./useAppSelector";
 import { selectPoll } from "../app/slices/pollSlice";
-import { selectUserFromToken } from "../app/slices/authSlice";
+import { selectPayloadFromToken } from "../app/slices/authSlice";
 
 export default function useIsAdmin() {
-    const userInfo = useSelector(selectUserFromToken);
+    const payload = useAppSelector(selectPayloadFromToken);
 
-    const poll = useSelector(selectPoll);
+    const poll = useAppSelector(selectPoll);
 
-    return userInfo?.id === poll?.adminID;
+    return payload?.id === poll?.adminID;
 }

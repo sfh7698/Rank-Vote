@@ -1,8 +1,7 @@
 import { Page } from "react-onsenui";
 import { Button } from "../components";
-import { Route } from "../utils/types";
+import { Route, goToPage } from "../utils";
 import { CreatePoll, JoinPoll } from "./index";
-import goToPage from "../utils/goToPage";
 
 export default function Home({navigator}: Route["props"]) {
 

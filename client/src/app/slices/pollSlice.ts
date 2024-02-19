@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit/react";
 import { PayloadAction } from "@reduxjs/toolkit/react";
 import { Poll } from "shared";
-import { RootState } from "../store";
 import { apiSlice } from "./apiSlice";
 import { isAnyOf } from "@reduxjs/toolkit/react";
 
@@ -21,6 +20,9 @@ export const pollSlice = createSlice({
             state.poll = action.payload;
         }
     },
+    selectors: {
+        selectPoll: (state) => state.poll
+    },
     extraReducers: (builder) => {
         builder.addMatcher(
             isAnyOf(apiSlice.endpoints.createPoll.matchFulfilled, apiSlice.endpoints.joinPoll.matchFulfilled),
@@ -33,6 +35,6 @@ export const pollSlice = createSlice({
 
 export const { setPoll } = pollSlice.actions;
 
-export const selectPoll = (state: RootState) => state.poll.poll;
+export const { selectPoll } = pollSlice.selectors;
 
 export default pollSlice.reducer;

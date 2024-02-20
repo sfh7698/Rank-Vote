@@ -18,37 +18,53 @@ export default class PollController {
 
     createPoll = async (req: Request<{}, {}, CreatePollFields>, res: Response<PollResponse>) => {
         const fields = req.body;
-        const result = await this.pollService.createPoll(fields);
-        this.setAuthHeader(res, result.accessToken);
+        try {
+            const result = await this.pollService.createPoll(fields);
+            this.setAuthHeader(res, result.accessToken);
+    
+            res.status(201).json({poll: result.poll});
 
-        res.status(201).json({poll: result.poll});
+        } catch(e) {
+            throw e;
+        }
         
     };
 
     joinPoll = async (req: Request<{}, {}, JoinPollFields>, res: Response<PollResponse>, next: NextFunction) => {
         const fields = req.body;
-        const result = await this.pollService.joinPoll(fields);
 
-        if(result === null) {
-            next(new BadRequestException("Invalid Poll ID"));
-            return
+        try {
+            const result = await this.pollService.joinPoll(fields);
+    
+            if(result === null) {
+                next(new BadRequestException("Invalid Poll ID"));
+                return
+            }
+    
+            this.setAuthHeader(res, result.accessToken);
+    
+            res.status(201).json({poll: result.poll});
+
+        } catch(e) {
+            throw e;
         }
-
-        this.setAuthHeader(res, result.accessToken);
-
-        res.status(201).json({poll: result.poll});
     };
 
     rejoinPoll = async (req: RequestWithAuth, res: Response<Poll>) => {
         const { userID, pollID, name } = req.body;
+        try {
+            const result = await this.pollService.rejoinPoll({
+                name,
+                pollID,
+                userID,
+            });
+    
+            res.status(201).json(result);
 
-        const result = await this.pollService.rejoinPoll({
-            name,
-            pollID,
-            userID,
-        });
+        } catch(e) {
+            throw e;
+        }
 
-        res.status(201).json(result);
     };
 
 

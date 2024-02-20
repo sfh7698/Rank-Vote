@@ -49,16 +49,21 @@ export default class PollService {
         const pollID = createPollID();
         const userID = createUserID();
 
-        const createdPoll = await this.pollRepository.createPoll({...fields, pollID, userID});
+        try {
+            const createdPoll = await this.pollRepository.createPoll({...fields, pollID, userID});
+    
+            // generalLogger.info( `Creating token string for pollID: ${createdPoll.id} and userID: ${userID}`);
+    
+            const signedString = generateToken(userID, createdPoll.id, fields.name);
+    
+            return {
+                poll: createdPoll,
+                accessToken: signedString
+            };
+        } catch(e) {
+            throw e;
+        }
 
-        // generalLogger.info( `Creating token string for pollID: ${createdPoll.id} and userID: ${userID}`);
-
-        const signedString = generateToken(userID, createdPoll.id, fields.name);
-
-        return {
-            poll: createdPoll,
-            accessToken: signedString
-        };
     };
 
     joinPoll = async (fields: JoinPollFields): Promise<PollServiceFields | null> => {
@@ -66,82 +71,135 @@ export default class PollService {
 
         // generalLogger.info(`Fetching poll with ID: ${fields.pollID} for user with ID: ${userID}`);
 
-        const joinedPoll = await this.pollRepository.getPoll(fields.pollID);
-
-        if(joinedPoll === null) {
-            return null;
+        try {
+            const joinedPoll = await this.pollRepository.getPoll(fields.pollID);
+    
+            if(joinedPoll === null) {
+                return null;
+            }
+    
+            // generalLogger.info(`Creating token string for pollID: ${joinedPoll.id} and userID: ${userID}`);
+    
+            const signedString = generateToken(userID, joinedPoll.id, fields.name);
+    
+            return {
+                poll: joinedPoll,
+                accessToken: signedString
+            }
+        } catch(e) {
+            throw e;
         }
 
-        // generalLogger.info(`Creating token string for pollID: ${joinedPoll.id} and userID: ${userID}`);
-
-        const signedString = generateToken(userID, joinedPoll.id, fields.name);
-
-        return {
-            poll: joinedPoll,
-            accessToken: signedString
-        }
     };
 
     rejoinPoll = async (fields: RejoinPollFields) : Promise<Poll> => {
         // generalLogger.info(`Rejoining poll with ID: ${fields.pollID} for user with ID: ${fields.userID} with name: ${fields.name}`);
-
-        return await this.pollRepository.addParticipant(fields);
+        try {
+            return await this.pollRepository.addParticipant(fields);
+        } catch(e) {
+            throw e;
+        }
     }
 
     addParticipant = async(addParticipant: AddParticipantFields): Promise<Poll> => {
-        return await this.pollRepository.addParticipant(addParticipant);
+        try {
+            return await this.pollRepository.addParticipant(addParticipant);
+
+        } catch(e) {
+            throw e;
+        }
     }
 
     removeParticipant = async(pollID: string, userID: string): Promise<Poll | void> => {
-        const poll = await this.pollRepository.getPoll(pollID);
+        try {
+            const poll = await this.pollRepository.getPoll(pollID);
+    
+            if(!poll.hasStarted) {
+                return await this.pollRepository.removeParticipant(pollID, userID);
+            }
 
-        if(!poll.hasStarted) {
-            return await this.pollRepository.removeParticipant(pollID, userID);
+        } catch(e) {
+            throw e;
         }
     }
 
     getPoll = async(pollID: string): Promise<Poll> => {
-        return await this.pollRepository.getPoll(pollID);
+        try {
+            return await this.pollRepository.getPoll(pollID);
+
+        } catch(e) {
+            throw e;
+        }
     }
     
     addNomination = async({pollID, userID, text}: AddNominationFields): Promise<Poll> => {
-        return this.pollRepository.addNomination({
-            pollID,
-            nominationID: createNominationID(),
-            nomination: {
-                userID,
-                text
-            }
-        });
+        try {
+            return this.pollRepository.addNomination({
+                pollID,
+                nominationID: createNominationID(),
+                nomination: {
+                    userID,
+                    text
+                }
+            });
+
+        } catch(e) {
+            throw e;
+        }
     }
 
     removeNomination = async(pollID: string, nominationID: string): Promise<Poll> => {
-        return await this.pollRepository.removeNomination(pollID, nominationID);
+        try {
+            return await this.pollRepository.removeNomination(pollID, nominationID);
+
+        } catch(e) {
+            throw e;
+        }
     }
 
     startPoll = async (pollID: string): Promise<Poll> => {
-        return await this.pollRepository.startPoll(pollID);
+        try {
+            return await this.pollRepository.startPoll(pollID);
+
+        } catch(e) {
+            throw e;
+        }
     }
 
     submitRankings = async(rankingsData: SubmitRankingsFields): Promise<Poll> => {
-        const poll = await this.pollRepository.getPoll(rankingsData.pollID);
+        try {
+            const poll = await this.pollRepository.getPoll(rankingsData.pollID);
+    
+            if(!poll.hasStarted) {
+                throw new UnauthorizedException(403, 'Participants cannot rank until the poll has started');
+            }
+    
+            return await this.pollRepository.addParticipantRankings(rankingsData);
 
-        if(!poll.hasStarted) {
-            throw new UnauthorizedException(403, 'Participants cannot rank until the poll has started');
+        } catch(e) {
+            throw e;
         }
-
-        return await this.pollRepository.addParticipantRankings(rankingsData);
     }
 
     computeResults = async(pollID: string): Promise<Poll> => {
-        const poll = await this.pollRepository.getPoll(pollID);
+        try {
+            const poll = await this.pollRepository.getPoll(pollID);
+    
+            const results = this.getResults(poll.rankings, poll.nominations, poll.votesPerVoter);
+    
+            return this.pollRepository.addResults(pollID, results);
 
-        const results = this.getResults(poll.rankings, poll.nominations, poll.votesPerVoter);
-
-        return this.pollRepository.addResults(pollID, results);
+        } catch(e) {
+            throw e;
+        }
     }
 
     cancelPoll = async(pollID: string): Promise<void> => {
-        await this.pollRepository.deletePoll(pollID);
+        try {
+            await this.pollRepository.deletePoll(pollID);
+
+        } catch(e) {
+            throw e;
+        }
     }
 }

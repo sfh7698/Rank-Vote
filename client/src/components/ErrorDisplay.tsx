@@ -1,21 +1,22 @@
+import { selectError, setError } from "../app/slices/errorSlice";
 import { Toast, Button } from "../components";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppSelector } from "../hooks/useAppSelector";
 
-interface ErrorDisplayProps {
-    setShowError: (toggle: boolean) => void,
-    showError: boolean,
-    error: string
-}
+export default function ErrorDisplay() {
+    const dispatch = useAppDispatch();
 
-export default function ErrorDisplay({setShowError, showError, error}: ErrorDisplayProps) {
+    const error = useAppSelector(selectError);
+
     return (
         <Toast 
-            isOpen={showError} 
+            isOpen={error !== ""} 
             animation="fall" 
             animationOptions={{duration: 0.3, timing: 'ease-in'}}
             >
             <div className="flex flex-row items-center justify-between">
                 {error}
-                <Button modifier="quiet" onClick={()=>setShowError(false)}>
+                <Button modifier="quiet" onClick={() => dispatch(setError(""))}>
                     Dismiss
                 </Button>
             </div>

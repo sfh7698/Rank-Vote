@@ -10,7 +10,7 @@ export const sendError = (socket: Socket<ClientToServerEvents, ServerToClientEve
     if (e instanceof(Exception)) {
         socket.emit("error", {type: e.getType(), message: e.message});
     } else {
-        socket.emit("error", e as string);
+        socket.emit("error", {type: "Unknown", message: e as string});
     }
 
 }

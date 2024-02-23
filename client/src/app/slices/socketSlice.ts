@@ -4,6 +4,7 @@ import { ServerToClientEvents, ClientToServerEvents } from "shared";
 import { RootState } from "../store";
 import {Poll} from "shared";
 import { setPoll } from "./pollSlice";
+import { setError } from "./errorSlice";
 
 
 export const socketSlice = apiSlice.injectEndpoints({
@@ -29,6 +30,14 @@ export const socketSlice = apiSlice.injectEndpoints({
                             return poll
                         })
                         dispatch(setPoll(poll))
+                    });
+
+                    socket.on('error', (error): void => {
+                        dispatch(setError(error.message))
+                    })
+
+                    socket.on('connect_error', (error): void => {
+                        dispatch(setError(error.message))
                     })
 
                 } catch {

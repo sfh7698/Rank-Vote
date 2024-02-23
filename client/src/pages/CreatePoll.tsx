@@ -1,10 +1,12 @@
 import { useCreatePollMutation } from "../app/slices/apiSlice";
-import { CountSelector, Button, ErrorDisplay } from "../components";
+import { CountSelector, Button} from "../components";
 import {Loader, WaitingRoom} from ".";
 import { Page } from "react-onsenui";
 import { Route, goToPage, getErrorMessage } from "../utils";
 import { useState } from "react";
 import { z } from "zod";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { setError } from "../app/slices/errorSlice";
 
 
 export default function CreatePoll({navigator}: Route["props"]) {
@@ -12,8 +14,8 @@ export default function CreatePoll({navigator}: Route["props"]) {
     const [votes, setVotes] = useState(3);
     const [name, setName] = useState('');
     const [showFab, setShowFab] = useState(true);
-    const [apiError, setApiError] = useState('');
-    const [showError, setShowError] = useState(false);
+
+    const dispatch = useAppDispatch();
     
     const [createPoll, {isLoading}] = useCreatePollMutation();
 
@@ -44,15 +46,13 @@ export default function CreatePoll({navigator}: Route["props"]) {
 
         } catch (e){
             setShowFab(true);
-            setApiError(getErrorMessage(e));
-            setShowError(true);
+            dispatch(setError(getErrorMessage(e)));
         }
     }
     
     return (
         <Page>
             {isLoading && <Loader />}
-            <ErrorDisplay setShowError={setShowError} showError={showError} error={apiError} />
             <div className="flex flex-col items-stretch mx-auto max-w-sm py-36 h-screen w-full">
                 <div className="flex flex-col items-center mb-4">
                     <label htmlFor="pollTopic" className="text-xl text-center"> Enter Poll Topic</label>

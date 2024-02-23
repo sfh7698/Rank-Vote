@@ -2,7 +2,7 @@ import { Poll } from "./poll.types";
 
 export interface ServerToClientEvents {
     poll_updated: (poll: Poll) => void;
-    error: (params: {type: string, message: string} | string) => void;
+    error: (params: {type: string, message: string}) => void;
     poll_cancelled: () => void;
 }
 

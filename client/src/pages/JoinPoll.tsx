@@ -1,16 +1,18 @@
 import { Page } from "react-onsenui"
-import { Button, ErrorDisplay } from "../components"
+import { Button } from "../components"
 import { Route, goToPage, getErrorMessage } from "../utils"
 import { useState } from "react"
-import {z} from "zod";
+import { z } from "zod";
 import { useJoinPollMutation } from "../app/slices/apiSlice";
-import {Loader, WaitingRoom} from ".";
+import { Loader, WaitingRoom } from ".";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { setError } from "../app/slices/errorSlice";
 
 export default function JoinPoll({navigator}: Route["props"]) {
     const [pollID, setPollID] = useState('');
     const [name, setName] = useState('');
-    const [apiError, setApiError] = useState('');
-    const [showError, setShowError] = useState(false);
+
+    const dispatch = useAppDispatch();
 
     const [joinPoll, {isLoading}] = useJoinPollMutation();
 
@@ -38,15 +40,13 @@ export default function JoinPoll({navigator}: Route["props"]) {
             goToPage(navigator, "Waiting", WaitingRoom);
 
         } catch(e) {
-            setApiError(getErrorMessage(e));
-            setShowError(true);
+            dispatch(setError(getErrorMessage(e)));
         }
     }
 
     return(
         <Page>
             {isLoading && <Loader />}
-            <ErrorDisplay showError={showError} setShowError={setShowError} error={apiError}/>
             <div className="flex flex-col w-full items-stretch h-full mx-auto max-w-sm py-36">
                 <div className="flex flex-col items-center mb-12">
                     <label htmlFor="pollID" className="text-xl text-center">Enter Poll ID</label>

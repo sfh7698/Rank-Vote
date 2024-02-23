@@ -3,11 +3,13 @@ import pollReducer from "./slices/pollSlice";
 import { apiSlice } from "./slices/apiSlice";
 import authReducer from "./slices/authSlice";
 import authMiddleware from "./authMiddleware";
+import errorsReducer from "./slices/errorSlice"
 
 export const store = configureStore({
     reducer: {
         poll: pollReducer,
         auth: authReducer,
+        errors: errorsReducer,
         [apiSlice.reducerPath]: apiSlice.reducer
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(authMiddleware.middleware).concat(apiSlice.middleware),

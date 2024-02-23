@@ -36,8 +36,8 @@ export const socketSlice = apiSlice.injectEndpoints({
                         dispatch(setError(error.message))
                     })
 
-                    socket.on('connect_error', (error): void => {
-                        dispatch(setError(error.message))
+                    socket.on('connect_error', (_): void => {
+                        dispatch(setError("Failed to connect to poll"));
                     })
 
                 } catch {

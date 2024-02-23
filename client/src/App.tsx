@@ -54,11 +54,11 @@ function App() {
 
   return (
     <>
-    <ErrorDisplay />
-    <Navigator
-      initialRoute={getInitialRoute()}
-      renderPage={renderPage}
-    />
+      <ErrorDisplay />
+      <Navigator
+        initialRoute={getInitialRoute()}
+        renderPage={renderPage}
+      />
     </>
   )
 }

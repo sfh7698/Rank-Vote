@@ -4,7 +4,6 @@ import { Route, goToPage } from "../utils";
 import { CreatePoll, JoinPoll } from "./index";
 
 export default function Home({navigator}: Route["props"]) {
-    //TODO: Move token check function from app to here and go to waiting room if token present
 
     return (
         <Page>

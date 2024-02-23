@@ -1,20 +1,17 @@
 import React from "react";
 import { Navigator } from "react-onsenui";
-import { Home, WaitingRoom } from "./pages";
+import { WaitingRoom } from "./pages";
 import { Route } from "./utils";
 import { useAppSelector } from "./hooks/useAppSelector";
 import { selectPayloadFromToken, setToken } from "./app/slices/authSlice";
 import { useAppDispatch } from "./hooks/useAppDispatch";
 import { ErrorDisplay } from "./components";
-
-export const homeRoute: Route = {
-  component: Home,
-  props: {key: 'Home'}
-}
+import { homeRoute } from "./utils";
 
 function App() {
 
   const dispatch = useAppDispatch();
+  const payload = useAppSelector(selectPayloadFromToken);
 
   const renderPage = (route: Route, navigator: Navigator) => {
     route.props = route.props || {};
@@ -22,16 +19,13 @@ function App() {
     return React.createElement(route.component, route.props);
   }
 
-  //TODO: Move following function to Home component
   function getInitialRoute(): Route {
     const token = localStorage.getItem('accessToken');
-
 
     if(!token){
       return homeRoute;
     }
 
-    const payload = useAppSelector(selectPayloadFromToken);
     const currentTimeInSeconds = Date.now() / 1000;
 
     const tokenExp = payload?.exp;

@@ -7,6 +7,11 @@ import { selectPayloadFromToken, setToken } from "./app/slices/authSlice";
 import { useAppDispatch } from "./hooks/useAppDispatch";
 import { ErrorDisplay } from "./components";
 
+export const homeRoute: Route = {
+  component: Home,
+  props: {key: 'Home'}
+}
+
 function App() {
 
   const dispatch = useAppDispatch();
@@ -17,14 +22,10 @@ function App() {
     return React.createElement(route.component, route.props);
   }
 
-  
+  //TODO: Move following function to Home component
   function getInitialRoute(): Route {
     const token = localStorage.getItem('accessToken');
 
-    const homeRoute: Route = {
-      component: Home,
-      props: {key: 'Home'}
-    }
 
     if(!token){
       return homeRoute;

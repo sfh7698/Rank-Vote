@@ -3,15 +3,15 @@ import { Navigator } from "react-onsenui";
 import { WaitingRoom } from "./pages";
 import { Route } from "./utils";
 import { useAppSelector } from "./hooks/useAppSelector";
-import { selectPayloadFromToken, setToken } from "./app/slices/authSlice";
-import { useAppDispatch } from "./hooks/useAppDispatch";
+import { selectPayloadFromToken } from "./app/slices/authSlice";
 import { ErrorDisplay } from "./components";
 import { homeRoute } from "./utils";
+import { useSetToken } from "./hooks/useSetToken";
 
 function App() {
 
-  const dispatch = useAppDispatch();
   const payload = useAppSelector(selectPayloadFromToken);
+  useSetToken();
 
   const renderPage = (route: Route, navigator: Navigator) => {
     route.props = route.props || {};
@@ -41,8 +41,6 @@ function App() {
         key: "WaitingRoom"
       }
     }
-
-    dispatch(setToken(token));
 
     return waitingRoomRoute;
   }

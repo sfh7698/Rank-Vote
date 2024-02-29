@@ -47,7 +47,7 @@ function App() {
 
   return (
     <>
-      <ErrorDisplay />
+      <ErrorDisplay duration={1500} />
       <Navigator
         initialRoute={getInitialRoute()}
         renderPage={renderPage}

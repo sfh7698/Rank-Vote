@@ -2,7 +2,8 @@ import { configureStore } from "@reduxjs/toolkit/react";
 import pollReducer from "./slices/pollSlice";
 import { apiSlice } from "./slices/apiSlice";
 import authReducer from "./slices/authSlice";
-import authMiddleware from "./authMiddleware";
+import authMiddleware from "./middlewares/authMiddleware";
+import socketMiddleware from "./middlewares/socketMiddleware";
 import errorsReducer from "./slices/errorSlice"
 
 export const store = configureStore({
@@ -12,7 +13,12 @@ export const store = configureStore({
         errors: errorsReducer,
         [apiSlice.reducerPath]: apiSlice.reducer
     },
-    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(authMiddleware.middleware).concat(apiSlice.middleware),
+    middleware: (getDefaultMiddleware) => 
+        getDefaultMiddleware()
+        .prepend(authMiddleware.middleware)
+        .prepend(socketMiddleware.middleware)
+        .concat(apiSlice.middleware)
+    ,
     devTools: true,
 })
 

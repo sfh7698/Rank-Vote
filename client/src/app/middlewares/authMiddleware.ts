@@ -1,5 +1,5 @@
-import { createListenerMiddleware } from "@reduxjs/toolkit";
-import { AppDispatch, RootState } from "./store";
+import { createListenerMiddleware } from "@reduxjs/toolkit/react";
+import { AppDispatch, RootState } from "../store";
 
 const authMiddleware = createListenerMiddleware();
 

@@ -1,19 +1,21 @@
 import { Page } from "react-onsenui";
-import { useStreamPollUpdatesQuery } from "../app/slices/socketSlice";
 import { Route } from "../utils";
 import { useCheckConnection } from "../hooks/useCheckConnection";
 import { Loader } from ".";
+import { useInitializeSocket } from "../hooks/useInitializeSocket";
+import { useAppSelector } from "../hooks/useAppSelector";
+import { selectPoll } from "../app/slices/pollSlice";
 
 export default function WaitingRoom({navigator}: Route["props"]) {
-    const {data} = useStreamPollUpdatesQuery();
+    useInitializeSocket();
 
-    console.log(data);
+    const isConnecting =  useCheckConnection(navigator);
 
-    const isLoading = useCheckConnection(navigator);
+    const poll = useAppSelector(selectPoll);
 
     return (
         <Page>
-            {(isLoading && !data) && <Loader />}
+            {(isConnecting && !poll) && <Loader />}
             <div>Waiting Room</div>
         </Page>
     )

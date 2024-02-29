@@ -11,10 +11,7 @@ const socketMiddleware = createListenerMiddleware();
 
 socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
     predicate: (action, curState) => {
-        // const isValidAction = initializeSocket.match(action) || emitSocketEvent.match(action);
-        const isValidState = curState.auth.accessToken !== null;
-        return initializeSocket.match(action) && isValidState;
-        // return isValidAction && isValidState;
+        return initializeSocket.match(action) && curState.auth.accessToken !== null;
     },
     effect: async (_, {getState, dispatch}) => {
 
@@ -68,8 +65,6 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
                         socket.disconnect();
                         break;
                     default:
-                        console.log(eventName);
-                        console.log(socket.id);
                         socket.emit(eventName);
                 }
             }

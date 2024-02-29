@@ -1,5 +1,5 @@
 export type Participants = {
-    [particpantID: string]: string
+    [participantID: string]: string
 };
 
 export type Nomination = {

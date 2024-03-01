@@ -14,6 +14,10 @@ const authSlice = createSlice({
             state.accessToken = action.payload;
         }
     },
+    selectors: {
+        selectToken: (state) => state.accessToken
+
+    },
     extraReducers: (builder) => {
         builder.addMatcher(
             isAnyOf(apiSlice.endpoints.createPoll.matchFulfilled, apiSlice.endpoints.joinPoll.matchFulfilled),
@@ -26,13 +30,13 @@ const authSlice = createSlice({
 
 export const { setToken } = authSlice.actions;
 
-export const selectPayloadFromToken = createSelector([(state) => state.auth.accessToken], (token) => {
+export interface JWTPayloadWithName extends JwtPayload {
+    name: string
+}
+
+export const selectPayloadFromToken = createSelector([authSlice.selectors.selectToken], (token) => {
     if (!token) {
         return token;
-    }
-
-    interface JWTPayloadWithName extends JwtPayload {
-        name: string
     }
 
     const payload = jwtDecode<JWTPayloadWithName>(token);

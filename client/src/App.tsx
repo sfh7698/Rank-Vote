@@ -7,6 +7,7 @@ import { selectPayloadFromToken } from "./app/slices/authSlice";
 import { ErrorDisplay } from "./components";
 import { homeRoute } from "./utils";
 import { useSetToken } from "./hooks/useSetToken";
+import { isJwtPayload } from "./utils";
 
 function App() {
 
@@ -28,8 +29,8 @@ function App() {
 
     const currentTimeInSeconds = Date.now() / 1000;
 
-    const tokenExp = payload?.exp;
-
+    const tokenExp = isJwtPayload(payload) ? payload?.exp : null;
+    
     if (tokenExp && (tokenExp < currentTimeInSeconds - 10)) {
       localStorage.removeItem('accessToken');
       return homeRoute;

@@ -1,19 +1,35 @@
 import { Page } from "react-onsenui";
 import { Button } from "../components";
-import { Route, goToPage } from "../utils";
+import { Route } from "../utils";
 import { CreatePoll, JoinPoll } from "./index";
 
 export default function Home({navigator}: Route["props"]) {
+
+    const createPollRoute: Route = {
+        props: {
+            key: "CreatePoll",
+            navigator
+        },
+        component: CreatePoll
+    }
+
+    const joinPollRoute: Route = {
+        props: {
+            key: "JoinPoll",
+            navigator
+        },
+        component: JoinPoll
+    }
 
     return (
         <Page>
             <div className="flex flex-col items-center justify-center h-full">
                 <h1> Rank Vote </h1>
                 <div className="flex flex-col space-y-4 mt-16">
-                    <Button onClick={()=>goToPage(navigator, "Create", CreatePoll)} modifier="outline">
+                    <Button onClick={()=>navigator?.pushPage(createPollRoute)} modifier="outline">
                         Create a Poll
                     </Button>
-                    <Button className="text-center" onClick={()=>goToPage(navigator, "Join", JoinPoll)} modifier="outline">
+                    <Button className="text-center" onClick={()=>navigator?.pushPage(joinPollRoute)} modifier="outline">
                         Join a Poll
                     </Button>
                 </div>

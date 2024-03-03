@@ -1,5 +1,5 @@
 import useCopy from "../hooks/useCopy";
-import { colorizeText } from "../utils/colorizeText";
+import { colorizeText } from "../utils";
 import { Icon } from "react-onsenui";
 
 interface PollIdDisplayProps {

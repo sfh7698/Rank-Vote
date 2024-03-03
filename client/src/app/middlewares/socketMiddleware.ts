@@ -3,8 +3,9 @@ import { AppDispatch, RootState } from "../store";
 import { Socket, io } from "socket.io-client";
 import { ServerToClientEvents, ClientToServerEvents } from "shared";
 import { setPoll } from "../slices/pollSlice";
-import { setError } from "../slices/errorSlice";
+import { errorResponses, setError } from "../slices/errorSlice";
 import { initializeSocket, emitSocketEvent } from "../socketActions"
+import { getPayloadFromToken } from "../../utils";
 
 
 const socketMiddleware = createListenerMiddleware();
@@ -25,7 +26,14 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
             console.log(`socket with id ${socket.id} connected`);
         })
 
-        socket.on("poll_updated", (poll) =>{
+        socket.on("poll_updated", (poll) => {
+            const token = getState().auth.accessToken;
+            const userID = token && getPayloadFromToken(token).subject;
+            
+            if (userID && !Object.keys(poll.participants).includes(userID)) {
+                dispatch(setError(errorResponses.REMOVED_ERROR));
+                return
+            }
             dispatch(setPoll(poll))
         });
 
@@ -34,7 +42,7 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
         })
 
         socket.on('connect_error', (_): void => {
-            dispatch(setError("Failed to connect to poll"));
+            dispatch(setError(errorResponses.TOKEN_ERROR));
         });
 
         socket.on("poll_cancelled", () => {

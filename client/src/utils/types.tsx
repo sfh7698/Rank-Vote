@@ -1,11 +1,14 @@
 import { Navigator } from "react-onsenui";
+import { Participants } from "shared";
+
+type props = {
+    key: string, 
+    navigator?: Navigator | undefined,
+    participants?: Participants
+}
 
 export type Route = {
-  props: { 
-    key: string,
-    navigator?: Navigator
-    [propName: string]: any
-  }
+  props: props
     component: (props: Route["props"]) => React.JSX.Element;
   }
 

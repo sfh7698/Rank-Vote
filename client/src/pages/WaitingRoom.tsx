@@ -1,13 +1,14 @@
 import { Page, Icon} from "react-onsenui";
+import { Route } from "../utils";
 import { useCheckConnection } from "../hooks/useCheckConnection";
-import { Loader } from ".";
+import { Loader, ParticipantPage } from ".";
 import { useInitializeSocket } from "../hooks/useInitializeSocket";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { selectPoll, selectParticipantCount, selectNominationCount, selectCanStartVote } from "../app/slices/pollSlice";
 import { PollIdDisplay, Button } from "../components";
 import useIsAdmin from "../hooks/useIsAdmin";
 
-export default function WaitingRoom() {
+export default function WaitingRoom({navigator}: Route["props"]) {
     useInitializeSocket();
 
     const isConnecting =  useCheckConnection();
@@ -18,6 +19,14 @@ export default function WaitingRoom() {
     const canVote = useAppSelector(selectCanStartVote);
     const isAdmin = useIsAdmin();
     const pollId = poll?.id !== undefined ? poll.id : "";
+
+    const participantPageRoute: Route = {
+        props: {
+            key: "Participants",
+            navigator
+        },
+        component: ParticipantPage
+    }
 
     return (
         <Page>
@@ -30,7 +39,7 @@ export default function WaitingRoom() {
                 </div>
                 <div className="flex justify-center">
                     <div className="mx-2">
-                        <Button modifier="outline">
+                        <Button modifier="outline" onClick={() => navigator?.pushPage(participantPageRoute)}>
                             <div className="flex flex-col items-center">
                                 <Icon className="mx-2" icon={"fa-users"} size={24}></Icon>
                                 <span>{participantCount}</span>

@@ -1,8 +1,8 @@
 import { useCreatePollMutation } from "../app/slices/apiSlice";
 import { CountSelector, Button} from "../components";
-import {Loader, WaitingRoom} from ".";
+import { Loader } from ".";
 import { Page } from "react-onsenui";
-import { Route, goToPage, getErrorMessage } from "../utils";
+import { Route, getErrorMessage, waitingRoomRoute } from "../utils";
 import { useState } from "react";
 import { z } from "zod";
 import { useAppDispatch } from "../hooks/useAppDispatch";
@@ -42,7 +42,7 @@ export default function CreatePoll({navigator}: Route["props"]) {
         try {
             setShowFab(false);
             await createPoll(parsedFields.data).unwrap();
-            goToPage(navigator, "Waiting", WaitingRoom);
+            navigator?.pushPage(waitingRoomRoute);
 
         } catch (e){
             setShowFab(true);

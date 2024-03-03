@@ -1,10 +1,10 @@
 import { Page } from "react-onsenui"
 import { Button } from "../components"
-import { Route, goToPage, getErrorMessage } from "../utils"
+import { Route, getErrorMessage, waitingRoomRoute } from "../utils"
 import { useState } from "react"
 import { z } from "zod";
 import { useJoinPollMutation } from "../app/slices/apiSlice";
-import { Loader, WaitingRoom } from ".";
+import { Loader } from ".";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { setError } from "../app/slices/errorSlice";
 
@@ -37,7 +37,7 @@ export default function JoinPoll({navigator}: Route["props"]) {
 
         try {
             await joinPoll(parsedFields.data).unwrap();
-            goToPage(navigator, "Waiting", WaitingRoom);
+            navigator?.pushPage(waitingRoomRoute);
 
         } catch(e) {
             dispatch(setError(getErrorMessage(e)));

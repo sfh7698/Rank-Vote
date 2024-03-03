@@ -1,13 +1,12 @@
 import React from "react";
 import { Navigator } from "react-onsenui";
-import { WaitingRoom } from "./pages";
-import { Route } from "./utils";
+import { Route, waitingRoomRoute } from "./utils";
 import { useAppSelector } from "./hooks/useAppSelector";
 import { selectPayloadFromToken } from "./app/slices/authSlice";
 import { ErrorDisplay } from "./components";
-import { homeRoute } from "./utils";
 import { useSetToken } from "./hooks/useSetToken";
 import { isJwtPayload } from "./utils";
+import { Home } from "./pages";
 
 function App() {
 
@@ -19,9 +18,14 @@ function App() {
     route.props.navigator = navigator;
     return React.createElement(route.component, route.props);
   }
-
+  
   function getInitialRoute(): Route {
     const token = localStorage.getItem('accessToken');
+    
+    const homeRoute: Route = {
+      component: Home,
+      props: {key: 'Home'}
+    }
 
     if(!token){
       return homeRoute;
@@ -36,19 +40,12 @@ function App() {
       return homeRoute;
     }
 
-    const waitingRoomRoute: Route = {
-      component: WaitingRoom,
-      props: {
-        key: "WaitingRoom"
-      }
-    }
-
     return waitingRoomRoute;
   }
 
   return (
     <>
-      <ErrorDisplay duration={1500} />
+      <ErrorDisplay duration={3000} />
       <Navigator
         initialRoute={getInitialRoute()}
         renderPage={renderPage}

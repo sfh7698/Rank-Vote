@@ -2,7 +2,9 @@ import React from "react";
 import { 
     Button as OnsButton,
     Fab as OnsFab,
-    Toast as OnsToast
+    Toast as OnsToast,
+    Card as OnsCard,
+    Toolbar as OnsToolBar
      } from "react-onsenui";
 
 function addChildrenProp<T extends React.ComponentType<any>>(component: T) {
@@ -17,6 +19,8 @@ function addChildrenProp<T extends React.ComponentType<any>>(component: T) {
 export const Button = addChildrenProp(OnsButton);
 export const Fab = addChildrenProp(OnsFab);
 export const Toast = addChildrenProp(OnsToast);
+export const Card = addChildrenProp(OnsCard);
+export const Toolbar = addChildrenProp(OnsToolBar);
 export {default as CountSelector} from "./CountSelector";
 export {default as ErrorDisplay} from "./ErrorDisplay";
 export {default as PollIdDisplay} from "./PollIdDisplay";

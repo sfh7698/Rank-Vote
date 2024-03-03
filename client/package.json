@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.1.0",
+    "copy-to-clipboard": "^3.3.3",
     "jwt-decode": "^4.0.0",
     "onsenui": "^2.12.8",
     "react": "^18.2.0",

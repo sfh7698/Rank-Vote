@@ -19,3 +19,4 @@ export const Fab = addChildrenProp(OnsFab);
 export const Toast = addChildrenProp(OnsToast);
 export {default as CountSelector} from "./CountSelector";
 export {default as ErrorDisplay} from "./ErrorDisplay";
+export {default as PollIdDisplay} from "./PollIdDisplay";

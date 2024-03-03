@@ -21,7 +21,14 @@ export const pollSlice = createSlice({
         }
     },
     selectors: {
-        selectPoll: (state) => state.poll
+        selectPoll: (state) => state.poll,
+        selectParticipantCount: (state) => Object.keys(state.poll?.participants || {}).length,
+        selectNominationCount: (state) => Object.keys(state.poll?.nominations || {}).length,
+        selectCanStartVote: (state): boolean => {
+            const votesPerVoter = state.poll?.votesPerVoter;
+            const nominationCount = pollSlice.getSelectors().selectNominationCount(state);
+            return votesPerVoter !== undefined ? nominationCount >= votesPerVoter : false
+        }
     },
     extraReducers: (builder) => {
         builder.addMatcher(
@@ -35,6 +42,6 @@ export const pollSlice = createSlice({
 
 export const { setPoll } = pollSlice.actions;
 
-export const { selectPoll } = pollSlice.selectors;
+export const { selectPoll, selectParticipantCount, selectNominationCount, selectCanStartVote } = pollSlice.selectors;
 
 export default pollSlice.reducer;

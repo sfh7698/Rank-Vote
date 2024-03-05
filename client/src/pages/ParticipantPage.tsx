@@ -10,8 +10,11 @@ import { useState } from "react";
 function renderToolbar() {
     return (
         <Toolbar modifier="transparent">
-            <div>
+            <div className="left">
                 <BackButton></BackButton>
+            </div>
+            <div className="center">
+                <h3>Participants</h3>
             </div>
         </Toolbar>
 
@@ -56,7 +59,6 @@ export default function ParticipantPage() {
                 </div>
             </AlertDialog>
             <Page renderToolbar={renderToolbar}>
-                <h2 className="text-center">Participants</h2>
                 <hr className="border-gray-400"></hr>
                 <div className="px-8 flex flex-wrap justify-center mb-2">
                     {participants && Object.entries(participants).map(([id, name]) =>

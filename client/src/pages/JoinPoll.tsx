@@ -53,7 +53,7 @@ export default function JoinPoll({navigator}: Route["props"]) {
                     <input
                         id="pollID"
                         type="text"
-                        className="w-64 border-solid rounded border-black border uppercase"
+                        className="w-64 border-solid rounded border-black border uppercase py-2 px-2"
                         autoCapitalize="characters"
                         maxLength={6}
                         onChange={(e) => setPollID(e.target.value.toUpperCase())}
@@ -64,7 +64,7 @@ export default function JoinPoll({navigator}: Route["props"]) {
                     <input 
                         type="text"
                         id="name"
-                        className="w-64 border-solid rounded border-black border"
+                        className="w-64 border-solid rounded border-black border py-2 px-2"
                         maxLength={25}
                         onChange={(e) => setName(e.target.value)}
                         autoComplete="given-name"

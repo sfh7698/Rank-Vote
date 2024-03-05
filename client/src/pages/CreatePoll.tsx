@@ -1,7 +1,7 @@
 import { useCreatePollMutation } from "../app/slices/apiSlice";
 import { CountSelector, Button} from "../components";
 import { Loader } from ".";
-import { Page } from "react-onsenui";
+import { Page} from "react-onsenui";
 import { Route, getErrorMessage, waitingRoomRoute } from "../utils";
 import { useState } from "react";
 import { z } from "zod";
@@ -60,7 +60,7 @@ export default function CreatePoll({navigator}: Route["props"]) {
                         maxLength={100}
                         id="pollTopic"
                         type="text"
-                        className="w-64 border-solid rounded border-black border"
+                        className="w-64 border-solid rounded border-black border py-2 px-2"
                         onChange={e => setPollTopic(e.target.value)}
                         >
                     </input>
@@ -80,7 +80,7 @@ export default function CreatePoll({navigator}: Route["props"]) {
                         id="name"
                         maxLength={25}
                         autoComplete="given-name"
-                        className="w-64 border-solid rounded border-black border"
+                        className="w-64 border-solid rounded border-black border py-2 px-2"
                         onChange={e => setName(e.target.value)}
                         >
                     </input>

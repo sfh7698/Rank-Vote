@@ -1,7 +1,7 @@
 import { Page, Icon} from "react-onsenui";
 import { Route } from "../utils";
 import { useCheckConnection } from "../hooks/useCheckConnection";
-import { Loader, ParticipantPage } from ".";
+import { Loader, ParticipantPage, NominationForm } from ".";
 import { useInitializeSocket } from "../hooks/useInitializeSocket";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { selectPoll, selectParticipantCount, selectNominationCount, selectCanStartVote } from "../app/slices/pollSlice";
@@ -28,11 +28,19 @@ export default function WaitingRoom({navigator}: Route["props"]) {
         component: ParticipantPage
     }
 
+    const nominationPageRoute: Route = {
+        props: {
+            key: "Nomination",
+            navigator
+        },
+        component: NominationForm
+    }
+
     return (
         <Page>
             {(isConnecting && !poll) && <Loader />}
             <div className="flex flex-col w-full justify-between items-center h-full">
-                <div className="mt-8">
+                <div className="flex flex-col mt-8">
                     <span className="text-center text-2xl">Poll Topic</span>
                     <p className="italic text-center mb-4 text-xl">{poll?.topic}</p>
                     <PollIdDisplay pollId={pollId}/>
@@ -47,7 +55,7 @@ export default function WaitingRoom({navigator}: Route["props"]) {
                         </Button>
                     </div>
                     <div className="mx-2">
-                        <Button modifier="outline">
+                        <Button modifier="outline" onClick={() => navigator?.pushPage(nominationPageRoute)}>
                             <div className="flex flex-col items-center">
                                 <Icon className="mx-2 ml-3" icon={"fa-edit"} size={28}></Icon>
                                 <span>{nominationCount}</span>

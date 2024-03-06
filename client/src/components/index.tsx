@@ -28,3 +28,4 @@ export const AlertDialogButton = addChildrenProp(OnsAlertDialogButton);
 export {default as CountSelector} from "./CountSelector";
 export {default as ErrorDisplay} from "./ErrorDisplay";
 export {default as PollIdDisplay} from "./PollIdDisplay";
+export {default as ConfirmationDialog} from "./ConfirmationDialog";

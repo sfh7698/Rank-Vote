@@ -14,11 +14,7 @@ export function useCheckConnection() {
     useEffect(() => {
         if (error === errorResponses.TOKEN_ERROR || error === errorResponses.REMOVED_ERROR) {
             setIsConnected(false);
-            localStorage.removeItem("accessToken");
-            dispatch(emitSocketEvent({eventName: "disconnect"}));
-            setTimeout(() => {
-                location.reload();
-            }, 2000);
+            dispatch(emitSocketEvent({eventName: "disconnect", delay: 2000}));
         }
 
     }, [error]);

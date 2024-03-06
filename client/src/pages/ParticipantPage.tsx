@@ -1,5 +1,5 @@
 import { Page, BackButton, Icon } from "react-onsenui";
-import { Card, Toolbar, AlertDialog, AlertDialogButton } from "../components";
+import { Card, Toolbar, ConfirmationDialog} from "../components";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { selectPoll } from "../app/slices/pollSlice";
 import useIsAdmin from "../hooks/useIsAdmin";
@@ -49,15 +49,12 @@ export default function ParticipantPage() {
 
     return (
         <>
-            <AlertDialog isOpen={showConfirmation} isCancelable={true} onCancel={() => setShowConfirmation(false)}>
-                <div className="flex justify-center">
-                    Remove {participantName} from poll?
-                </div>
-                <div className="flex">
-                    <AlertDialogButton onClick={() => setShowConfirmation(false)}>Cancel</AlertDialogButton>
-                    <AlertDialogButton onClick={() => removeParticipant()}>Confirm</AlertDialogButton>
-                </div>
-            </AlertDialog>
+            <ConfirmationDialog 
+            showDialog={showConfirmation} 
+            message={`Remove ${participantName} from poll?`}
+            setShowDialog={setShowConfirmation}
+            onConfirm={removeParticipant}
+            />
             <Page renderToolbar={renderToolbar}>
                 <hr className="border-gray-400"></hr>
                 <div className="px-8 flex flex-wrap justify-center mb-2">

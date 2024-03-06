@@ -3,7 +3,7 @@ import { createAction } from "@reduxjs/toolkit/react";
 export const initializeSocket = createAction('socket/initalize');
 
 type socketPayload = 
-    | { eventName: "disconnect" }
+    | { eventName: "disconnect", delay: number }
     | { eventName: "remove_participant", data: { id: string } }
     | { eventName: "nominate", data: { text: string } }
     | { eventName: "remove_nomination", data: { id: string } }

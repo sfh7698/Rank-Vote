@@ -70,7 +70,11 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
                         socket.emit(eventName, action.payload.data);
                         break;
                     case("disconnect"):
+                        localStorage.removeItem("accessToken");
                         socket.disconnect();
+                        setTimeout(() => {
+                            location.reload();
+                        }, action.payload.delay);
                         break;
                     default:
                         socket.emit(eventName);

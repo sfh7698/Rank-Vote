@@ -10,21 +10,24 @@ import useIsAdmin from "../hooks/useIsAdmin";
 import { useState } from "react";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
+import { useWaitForVoting } from "../hooks/useWaitForVoting";
 
 export default function WaitingRoom({navigator}: Route["props"]) {
     useInitializeSocket();
 
+    useWaitForVoting(navigator);
+    
     const isConnecting =  useCheckConnection();
 
     const [showConfirmation, setShowConfirmation] = useState(false);
-
+    
     const poll = useAppSelector(selectPoll);
     const participantCount = useAppSelector(selectParticipantCount);
     const nominationCount = useAppSelector(selectNominationCount);
     const canVote = useAppSelector(selectCanStartVote);
     const isAdmin = useIsAdmin();
     const pollId = poll?.id !== undefined ? poll.id : "";
-
+    
     const dispatch = useAppDispatch();
 
     const participantPageRoute: Route = {
@@ -93,6 +96,7 @@ export default function WaitingRoom({navigator}: Route["props"]) {
                                 className="w-full text-center"
                                 modifier="outline"
                                 disabled={!canVote}
+                                onClick={() => dispatch(emitSocketEvent({eventName: "start_vote"}))}
                                 >
                                 Start Voting
                             </Button>

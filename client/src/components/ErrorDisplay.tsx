@@ -2,7 +2,7 @@ import { selectError, setError } from "../app/slices/errorSlice";
 import { Toast, Button } from "../components";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { useDuration } from "../hooks/useDuration";
+import { useErrorDuration } from "../hooks/useErrorDuration";
 
 interface errorDisplayProps {
     duration?: number
@@ -13,7 +13,7 @@ export default function ErrorDisplay({duration}: errorDisplayProps) {
 
     const error = useAppSelector(selectError);
 
-    useDuration(error, duration);
+    useErrorDuration(error, duration);
 
     return (
         <Toast 

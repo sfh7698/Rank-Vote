@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit/react";
 export enum errorResponses {
     TOKEN_ERROR = "Failed to connect to poll",
     REMOVED_ERROR = "You have been removed from the poll",
+    CANCELLED_ERROR = "Poll Cancelled"
 }
 
 type initialState = {

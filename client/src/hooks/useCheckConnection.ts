@@ -12,7 +12,7 @@ export function useCheckConnection() {
     const error = useAppSelector(selectError);
 
     useEffect(() => {
-        if (error === errorResponses.TOKEN_ERROR || error === errorResponses.REMOVED_ERROR) {
+        if (error === errorResponses.TOKEN_ERROR || error === errorResponses.REMOVED_ERROR || error === errorResponses.CANCELLED_ERROR) {
             setIsConnected(false);
             dispatch(emitSocketEvent({eventName: "disconnect", delay: 2000}));
         }

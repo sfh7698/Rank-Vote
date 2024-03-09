@@ -46,7 +46,7 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
         });
 
         socket.on("poll_cancelled", () => {
-            dispatch(setError("Poll Cancelled"));
+            dispatch(setError(errorResponses.CANCELLED_ERROR));
         })
 
         const emitEventListener = addListener.withTypes<RootState, AppDispatch>();

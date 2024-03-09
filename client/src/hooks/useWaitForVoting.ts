@@ -3,7 +3,7 @@ import { Navigator } from "react-onsenui";
 import { useAppSelector } from "./useAppSelector";
 import { selectPoll } from "../app/slices/pollSlice";
 import { Route } from "../utils";
-import VotingPage from "../pages/VotingPage";
+import { VotingPage } from "../pages";
 
 export function useWaitForVoting(navigator: Navigator | undefined) {
     const poll = useAppSelector(selectPoll);

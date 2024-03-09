@@ -1,5 +1,5 @@
 import { Page, BackButton, Icon } from "react-onsenui";
-import { Card, Toolbar, ConfirmationDialog} from "../components";
+import { Card, Toolbar, ConfirmationDialog, Button} from "../components";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { selectPoll } from "../app/slices/pollSlice";
 import useIsAdmin from "../hooks/useIsAdmin";
@@ -40,11 +40,9 @@ export default function ParticipantPage() {
     }
 
     function handleShowConfirmation(id: string){
-        if(isAdmin && id !== poll?.adminID) {
-            participants && setParticipant(participants[id]);
-            setParticipantID(id);
-            setShowConfirmation(true);
-        }
+        participants && setParticipant(participants[id]);
+        setParticipantID(id);
+        setShowConfirmation(true);
     }
 
     return (
@@ -60,10 +58,13 @@ export default function ParticipantPage() {
                 <div className="px-8 flex flex-wrap justify-center mb-2">
                     {participants && Object.entries(participants).map(([id, name]) =>
                         <Card key={id}>
-                            <div className="flex justify-center" onClick={() => handleShowConfirmation(id)}>
+                            <div className="flex justify-center">
                                 <p className="m-2">{name}</p>
-                                {(isAdmin && poll?.adminID !== id)
-                                    && <Icon icon={"fa-close"} size={20} className="mt-1 text-red-600"></Icon>}
+                                {(isAdmin && poll?.adminID !== id) && 
+                                    <Button modifier="quiet" onClick={() => handleShowConfirmation(id)}>
+                                        <Icon icon={"fa-close"} size={20} className="mt-1 text-red-600"></Icon>
+                                    </Button>
+                                }
                             </div>
                         </Card>
                     )}

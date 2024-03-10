@@ -3,11 +3,10 @@ import { useState, useRef } from "react";
 import { Button, Toolbar } from "../components";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { useAppDispatch } from "../hooks/useAppDispatch";
-import { selectPoll } from "../app/slices/pollSlice";
+import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { selectPayloadFromToken } from "../app/slices/authSlice";
 import { isJwtPayload } from "../utils";
 import { emitSocketEvent } from "../app/socketActions";
-import useIsAdmin from "../hooks/useIsAdmin";
 
 function renderToolbar() {
     return (
@@ -26,7 +25,7 @@ export default function NominationForm() {
     const poll = useAppSelector(selectPoll);
     const nominations = poll?.nominations ? poll.nominations : {};
     const payload = useAppSelector(selectPayloadFromToken);
-    const isAdmin = useIsAdmin();
+    const isAdmin = useAppSelector(selectIsAdmin);
 
     const dispatch = useAppDispatch();
 

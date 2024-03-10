@@ -1,11 +1,10 @@
 import { Page } from "react-onsenui";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { selectPoll } from "../app/slices/pollSlice";
+import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { useState } from "react"
 import { Button, RankedNomination, ConfirmationDialog } from "../components";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
-import useIsAdmin from "../hooks/useIsAdmin";
 
 export default function VotingPage(){
     const [rankings, setRankings] = useState<string[]>([]);
@@ -13,7 +12,7 @@ export default function VotingPage(){
     const [showConfirmCancel, setShowConfirmCancel] = useState(false);
 
     const poll = useAppSelector(selectPoll);
-    const isAdmin = useIsAdmin();
+    const isAdmin = useAppSelector(selectIsAdmin);
 
     const dispatch = useAppDispatch();
 

@@ -4,9 +4,8 @@ import { useCheckConnection } from "../hooks/useCheckConnection";
 import { Loader, ParticipantPage, NominationForm } from ".";
 import { useInitializeSocket } from "../hooks/useInitializeSocket";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { selectPoll, selectParticipantCount, selectNominationCount, selectCanStartVote } from "../app/slices/pollSlice";
+import { selectPoll, selectParticipantCount, selectNominationCount, selectCanStartVote, selectIsAdmin } from "../app/slices/pollSlice";
 import { PollIdDisplay, Button, ConfirmationDialog } from "../components";
-import useIsAdmin from "../hooks/useIsAdmin";
 import { useState } from "react";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
@@ -25,7 +24,8 @@ export default function WaitingRoom({navigator}: Route["props"]) {
     const participantCount = useAppSelector(selectParticipantCount);
     const nominationCount = useAppSelector(selectNominationCount);
     const canVote = useAppSelector(selectCanStartVote);
-    const isAdmin = useIsAdmin();
+    const isAdmin = useAppSelector(selectIsAdmin);
+
     const pollId = poll?.id !== undefined ? poll.id : "";
     
     const dispatch = useAppDispatch();

@@ -1,8 +1,7 @@
 import { Page, BackButton, Icon } from "react-onsenui";
 import { Card, Toolbar, ConfirmationDialog, Button} from "../components";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { selectPoll } from "../app/slices/pollSlice";
-import useIsAdmin from "../hooks/useIsAdmin";
+import { selectPoll, selectIsAdmin } from "../app/slices/pollSlice";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
 import { useState } from "react";
@@ -28,7 +27,7 @@ export default function ParticipantPage() {
 
     const poll = useAppSelector(selectPoll);
     const participants = poll?.participants;
-    const isAdmin = useIsAdmin();
+    const isAdmin = useAppSelector(selectIsAdmin);
 
     const dispatch = useAppDispatch();
 

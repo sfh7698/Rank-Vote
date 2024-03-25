@@ -1,12 +1,14 @@
-import { Page } from "react-onsenui";
+import { Page} from "react-onsenui";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { useState } from "react"
 import { Button, RankedNomination, ConfirmationDialog } from "../components";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
+import { Route } from "../utils";
+import Results from "./ResultsPage";
 
-export default function VotingPage(){
+export default function VotingPage({navigator}: Route["props"]){
     const [rankings, setRankings] = useState<string[]>([]);
     const [showConfirmVotes, setShowConfirmVotes] = useState(false);
     const [showConfirmCancel, setShowConfirmCancel] = useState(false);
@@ -40,6 +42,16 @@ export default function VotingPage(){
     const handleSubmitRankings = () => {
         dispatch(emitSocketEvent({eventName: "submit_rankings", data: {rankings}}));
         setShowConfirmVotes(false);
+
+        const resultsRoute: Route = {
+            props: {
+                key: "Results",
+                navigator
+            },
+            component: Results
+        }
+
+        navigator?.pushPage(resultsRoute);
     }
     
     return(

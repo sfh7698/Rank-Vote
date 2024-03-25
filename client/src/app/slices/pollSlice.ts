@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit/react";
+import { createSelector, createSlice } from "@reduxjs/toolkit/react";
 import { PayloadAction } from "@reduxjs/toolkit/react";
 import { Poll } from "shared";
 import { apiSlice } from "./apiSlice";
@@ -54,5 +54,9 @@ export const selectIsAdmin = (state: RootState) => {
 
     return isJwtPayload(payload) ? payload?.id === poll?.adminID : false;
 }
+
+export const selectRankingsCount = createSelector(pollSlice.selectors.selectPoll, (poll) => {
+    return Object.keys(poll?.rankings ?? {}).length;
+});
 
 export default pollSlice.reducer;

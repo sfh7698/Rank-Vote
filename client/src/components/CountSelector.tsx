@@ -29,7 +29,6 @@ export default function CountSelector({onChange, initialVotes, showFab}: CountSe
                 modifier="mini"
                 onClick={decrement}
                 disabled={count <= minVotes}
-                className="btn-round"
             >
                 <Icon icon="fa-minus"></Icon>
             </Fab>}
@@ -38,7 +37,6 @@ export default function CountSelector({onChange, initialVotes, showFab}: CountSe
                 modifier="mini"
                 onClick={increment}
                 disabled={count >= maxVotes}
-                className="btn-round"
             >
                 <Icon icon='fa-plus'></Icon>
             </Fab>}

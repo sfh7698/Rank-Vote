@@ -24,12 +24,12 @@ export default function Home({navigator}: Route["props"]) {
     return (
         <Page>
             <div className="flex flex-col items-center justify-center h-full">
-                <h1> Rank Vote </h1>
+               <h1 className="text-blue-500"> Rank Vote </h1>
                 <div className="flex flex-col space-y-4 mt-16">
-                    <Button onClick={()=>navigator?.pushPage(createPollRoute)} modifier="outline">
+                    <Button onClick={()=>navigator?.pushPage(createPollRoute)}>
                         Create a Poll
                     </Button>
-                    <Button className="text-center" onClick={()=>navigator?.pushPage(joinPollRoute)} modifier="outline">
+                    <Button className="text-center" onClick={()=>navigator?.pushPage(joinPollRoute)}>
                         Join a Poll
                     </Button>
                 </div>

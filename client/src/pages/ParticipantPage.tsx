@@ -1,24 +1,10 @@
-import { Page, BackButton, Icon } from "react-onsenui";
-import { Card, Toolbar, ConfirmationDialog, Button} from "../components";
+import { Page, Icon } from "react-onsenui";
+import { Card, ConfirmationDialog, Button, Title} from "../components";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { selectPoll, selectIsAdmin } from "../app/slices/pollSlice";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
 import { useState } from "react";
-
-function renderToolbar() {
-    return (
-        <Toolbar modifier="transparent">
-            <div className="left">
-                <BackButton></BackButton>
-            </div>
-            <div className="center">
-                <h3>Participants</h3>
-            </div>
-        </Toolbar>
-
-    )
-}
 
 export default function ParticipantPage() {
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -52,7 +38,7 @@ export default function ParticipantPage() {
             setShowDialog={setShowConfirmation}
             onConfirm={removeParticipant}
             />
-            <Page renderToolbar={renderToolbar}>
+            <Page renderToolbar={() => <Title title="Participants"></Title>}>
                 <hr className="border-gray-400"></hr>
                 <div className="px-8 flex flex-wrap justify-center mb-2">
                     {participants && Object.entries(participants).map(([id, name]) =>

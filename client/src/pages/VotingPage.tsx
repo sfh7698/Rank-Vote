@@ -92,7 +92,6 @@ export default function VotingPage({navigator}: Route["props"]){
                     <div className="mx-auto flex flex-col items-center">
                         <div className="my-2">
                             <Button
-                            modifier="outline"
                             disabled={poll?.votesPerVoter ? rankings.length < poll?.votesPerVoter: false}
                             onClick={() => setShowConfirmVotes(true)}
                             className="w-36 text-center"

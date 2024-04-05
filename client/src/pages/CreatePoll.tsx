@@ -1,13 +1,12 @@
 import { useCreatePollMutation } from "../app/slices/apiSlice";
-import { CountSelector, Button} from "../components";
+import { CountSelector, Button, Title } from "../components";
 import { Loader } from ".";
-import { Page} from "react-onsenui";
+import { Page } from "react-onsenui";
 import { Route, getErrorMessage, waitingRoomRoute } from "../utils";
 import { useState } from "react";
 import { z } from "zod";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { setError } from "../app/slices/errorSlice";
-
 
 export default function CreatePoll({navigator}: Route["props"]) {
     const [pollTopic, setPollTopic] = useState('');
@@ -51,9 +50,10 @@ export default function CreatePoll({navigator}: Route["props"]) {
     }
     
     return (
-        <Page>
+        <Page renderToolbar={() => <Title title="Create Poll"></Title>}>
             {isLoading && <Loader />}
-            <div className="flex flex-col items-stretch mx-auto max-w-sm py-36 h-screen w-full">
+            <hr className="border-gray-400"></hr>
+            <div className="flex flex-col items-stretch mx-auto max-w-sm w-full pt-14">
                 <div className="flex flex-col items-center mb-4">
                     <label htmlFor="pollTopic" className="text-xl text-center"> Enter Poll Topic</label>
                     <input
@@ -73,7 +73,7 @@ export default function CreatePoll({navigator}: Route["props"]) {
                     showFab={showFab}
                     />
                 </div>
-                <div className="flex flex-col items-center mb-4">
+                <div className="flex flex-col items-center">
                     <label htmlFor="name" className="text-xl text-center"> Enter Name </label>
                     <input
                         type="text"
@@ -87,18 +87,11 @@ export default function CreatePoll({navigator}: Route["props"]) {
                 </div>
                 <div className="flex flex-col items-center mt-16 space-y-4">
                     <Button 
-                        modifier="outline" 
                         className="w-24 text-center"
                         disabled={!parsedFields.success}
                         onClick={handleSubmit}
                         >
                         Create
-                    </Button>
-                    <Button 
-                        modifier="outline"
-                        onClick={()=>navigator?.popPage()}
-                        >
-                        Start Over
                     </Button>
                 </div>
             </div>

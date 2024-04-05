@@ -35,3 +35,4 @@ export {default as PollIdDisplay} from "./PollIdDisplay";
 export {default as ConfirmationDialog} from "./ConfirmationDialog";
 export {default as RankedNomination} from "./RankedNomination";
 export {default as ResultCard} from "./ResultCard";
+export {default as Title} from "./Title";

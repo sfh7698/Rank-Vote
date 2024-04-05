@@ -1,5 +1,5 @@
 import { Page } from "react-onsenui"
-import { Button } from "../components"
+import { Button, Title } from "../components"
 import { Route, getErrorMessage, waitingRoomRoute } from "../utils"
 import { useState } from "react"
 import { z } from "zod";
@@ -45,9 +45,10 @@ export default function JoinPoll({navigator}: Route["props"]) {
     }
 
     return(
-        <Page>
+        <Page renderToolbar={() => <Title title="Join Poll"></Title>}>
             {isLoading && <Loader />}
-            <div className="flex flex-col w-full items-stretch h-full mx-auto max-w-sm py-36">
+            <hr className="border-gray-400"></hr>
+            <div className="flex flex-col w-full items-stretch mx-auto max-w-sm pt-14">
                 <div className="flex flex-col items-center mb-12">
                     <label htmlFor="pollID" className="text-xl text-center">Enter Poll ID</label>
                     <input
@@ -72,18 +73,11 @@ export default function JoinPoll({navigator}: Route["props"]) {
                 </div>
                 <div className="flex flex-col items-center mt-16 space-y-4">
                     <Button
-                        modifier="outline"
                         className="w-24 text-center"
                         disabled={!parsedFields.success}
                         onClick={handleJoinPoll}
                         >
                         Join Poll
-                    </Button>
-                    <Button
-                        modifier="outline"
-                        onClick={()=> navigator?.popPage()}
-                        >
-                        Start Over
                     </Button>
                 </div>
             </div>

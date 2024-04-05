@@ -94,7 +94,6 @@ export default function WaitingRoom({navigator}: Route["props"]) {
                         <div className="mb-2">
                             <Button
                                 className="w-full text-center"
-                                modifier="outline"
                                 disabled={!canVote}
                                 onClick={() => dispatch(emitSocketEvent({eventName: "start_vote"}))}
                                 >

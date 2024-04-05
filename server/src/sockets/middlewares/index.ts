@@ -3,7 +3,8 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { authAdmin, isAdminEvent } from './admin';
 import { nominateSchema } from '../middlewares/validate';
 import { sendError } from "../utils/errorHandler";
-import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../socket.types";
+import { SocketWithAuth} from "../types";
+import {ClientToServerEvents, ServerToClientEvents} from "shared";
 
 export default (_: Namespace<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>, 
     socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>) => {

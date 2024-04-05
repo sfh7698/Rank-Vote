@@ -1,10 +1,11 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { generalLogger, errorLogger } from "../../utils/loggers";
 import { Socket } from "socket.io";
-import { NextFunction } from "../socket.types";
+import { NextFunction } from "../types";
 import { getToken } from "../utils/getToken";
 import { BadRequestException, UnknownException } from "../../utils/exceptions";
-import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../socket.types";
+import { SocketWithAuth} from "../types";
+import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 // (createTokenMiddleware)

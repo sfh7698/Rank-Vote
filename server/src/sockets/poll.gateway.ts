@@ -1,7 +1,8 @@
 import { Namespace, Socket } from 'socket.io';
 import { generalLogger } from '../utils/loggers';
 import PollService from '../api/polls/poll.service';
-import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth } from './socket.types';
+import { SocketWithAuth } from './types';
+import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { sendError } from './utils/errorHandler';
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 

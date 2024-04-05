@@ -6,7 +6,8 @@ import { Socket } from 'socket.io';
 import PollService from '../api/polls/poll.service';
 import { sendError } from './utils/errorHandler';
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "./socket.types";
+import { SocketWithAuth} from "./types";
+import {ClientToServerEvents, ServerToClientEvents} from "shared";
 
 
 const onConnection = async(socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>) => {

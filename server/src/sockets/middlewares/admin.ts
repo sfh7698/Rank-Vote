@@ -1,11 +1,12 @@
 import PollService from "../../api/polls/poll.service";
 import { generalLogger, errorLogger } from "../../utils/loggers";
 import { Socket } from "socket.io";
-import { NextFunction } from "../socket.types";
+import { NextFunction } from "../types";
 import { getToken } from "../utils/getToken";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { sendError } from "../utils/errorHandler";
-import { ClientToServerEvents, ServerToClientEvents, SocketWithAuth} from "../socket.types";
+import { SocketWithAuth} from "../types";
+import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 export const isAdminEvent = (eventName: string) => {

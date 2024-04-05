@@ -1,5 +1,5 @@
 import { Page, BackButton, List, ListItem, Icon } from "react-onsenui";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Button, Toolbar } from "../components";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { useAppDispatch } from "../hooks/useAppDispatch";
@@ -20,7 +20,6 @@ function renderToolbar() {
 
 export default function NominationForm() {
     const [nominationText, setNominationText] = useState<string>();
-    const direction = useRef<"left" | "right">()
 
     const poll = useAppSelector(selectPoll);
     const nominations = poll?.nominations ? poll.nominations : {};
@@ -32,10 +31,8 @@ export default function NominationForm() {
     const getBoxStyle = (id: string): string => {
         if (isJwtPayload(payload)) {
             if (id === payload.id) {
-                direction.current = "left";
-                return 'bg-orange-100'
+                return 'bg-blue-300'
             }
-            direction.current = "right";
             return 'bg-gray-100';
         }
         return ''
@@ -77,12 +74,12 @@ export default function NominationForm() {
                 <div className="w-full mb-2">
                     <List dataSource={Object.entries(nominations)} renderRow={([nominationID, nomination]) => 
                         <ListItem key={nominationID} className={`${getBoxStyle(nomination.userID)} rounded-md`}>
-                            <div className={direction.current}>
+                            <div className="right">
                                 {nomination.text}
                             </div>
                             {isAdmin &&
                             <Button 
-                            className={direction.current === 'right' ? 'left' : 'right'}
+                            className="left"
                             modifier="quiet"
                             onClick={() => handleRemoveNomination(nominationID)}>
                                 <Icon icon={'md-close-circle'} size={24} className="text-red-600"></Icon>

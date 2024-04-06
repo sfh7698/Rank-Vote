@@ -9,10 +9,10 @@ interface RankedNominationProps {
 export default function RankedNomination({rank, nominationText, onSelect}: RankedNominationProps){
     return (
         <div className="my-4" onClick={onSelect}>
-            <Card className="border-2 border-orange-600 text-orange-700 relative">
+            <Card className="border-2 border-indigo-700 text-indigo-700 relative">
                 <div className="font-semibold text-center">{nominationText}</div>
                 {rank && (
-                    <div className="absolute w-6 h-6 -top-3 -right-3 rounded-full bg-purple-600">
+                    <div className="absolute w-6 h-6 -top-3 -right-3 rounded-full bg-indigo-600">
                         <div className="text-center font-medium text-white">{rank}</div>
                     </div>
                 )}

@@ -73,7 +73,7 @@ export default function NominationForm() {
                     </Button>
                 </div>
                 <h2>Nominations</h2>
-                <div className="w-full mb-2 border-2 border-blue-500 rounded grow overflow-y-auto min-h-0">
+                <div className="w-full mb-2 border-2 border-blue-500 rounded grow overflow-y-auto">
                     <List dataSource={Object.entries(nominations)} renderRow={([nominationID, nomination]) => 
                         <ListItem key={nominationID} className={`${getBoxStyle(nomination.userID)} rounded-md`}>
                             <div className="right">

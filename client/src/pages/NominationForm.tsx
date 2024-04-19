@@ -31,7 +31,7 @@ export default function NominationForm() {
     const getBoxStyle = (id: string): string => {
         if (isJwtPayload(payload)) {
             if (id === payload.id) {
-                return 'bg-indigo-100'
+                return 'bg-orange-100'
             }
             return 'bg-gray-100';
         }

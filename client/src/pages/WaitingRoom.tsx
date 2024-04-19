@@ -4,9 +4,14 @@ import { useCheckConnection } from "../hooks/useCheckConnection";
 import { Loader, ParticipantPage, NominationForm } from ".";
 import { useInitializeSocket } from "../hooks/useInitializeSocket";
 import { useAppSelector } from "../hooks/useAppSelector";
-import { selectPoll, selectParticipantCount, selectNominationCount, selectCanStartVote, selectIsAdmin } from "../app/slices/pollSlice";
+import { selectPoll, 
+        selectParticipantCount, 
+        selectNominationCount, 
+        selectCanStartVote, 
+        selectIsAdmin,
+        selectNumUsersNominated } from "../app/slices/pollSlice";
 import { PollIdDisplay, Button, ConfirmationDialog } from "../components";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
 import { useWaitForVoting } from "../hooks/useWaitForVoting";
@@ -18,13 +23,16 @@ export default function WaitingRoom({navigator}: Route["props"]) {
     
     const isConnecting =  useCheckConnection();
 
-    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showLeaveConfirmation, setShowLeaveConfirmation] = useState(false);
+    const [showStartConfirmation, setShowStartConfirmation] = useState(false);
+    const messageRef = useRef("");
     
     const poll = useAppSelector(selectPoll);
     const participantCount = useAppSelector(selectParticipantCount);
     const nominationCount = useAppSelector(selectNominationCount);
     const canVote = useAppSelector(selectCanStartVote);
     const isAdmin = useAppSelector(selectIsAdmin);
+    const numUsersNominated = useAppSelector(selectNumUsersNominated);
 
     const pollId = poll?.id !== undefined ? poll.id : "";
     
@@ -46,18 +54,44 @@ export default function WaitingRoom({navigator}: Route["props"]) {
         component: NominationForm
     }
 
+    function sendSocketEvent() {
+        dispatch(emitSocketEvent({eventName: "start_vote"}));
+        setShowStartConfirmation(false);
+    }
+
     function handleLeavePoll() {
         dispatch(emitSocketEvent({eventName: "disconnect", delay: 0}));
-        setShowConfirmation(false);
+        setShowLeaveConfirmation(false);
+    }
+
+    function handleStartVoting(){
+        if(numUsersNominated !== participantCount) {
+            const nonNominatedUsers = participantCount - numUsersNominated;
+            if (nonNominatedUsers > 1) {
+                messageRef.current = `${nonNominatedUsers} users have not voted! Start Voting?`
+            } else {
+                messageRef.current = `${nonNominatedUsers} user has not voted!\nStart Voting?`
+            }
+
+            setShowStartConfirmation(true);
+            return
+        }
+        sendSocketEvent();
     }
 
     return (
         <>
             <ConfirmationDialog
             message="You will be kicked from the poll"
-            showDialog={showConfirmation}
+            showDialog={showLeaveConfirmation}
             onConfirm={handleLeavePoll}
-            setShowDialog={setShowConfirmation}
+            setShowDialog={setShowLeaveConfirmation}
+            />
+            <ConfirmationDialog
+            message={messageRef.current}
+            showDialog={showStartConfirmation}
+            onConfirm={sendSocketEvent}
+            setShowDialog={setShowStartConfirmation}
             />
             <Page>
                 {(isConnecting && !poll) && <Loader />}
@@ -88,14 +122,15 @@ export default function WaitingRoom({navigator}: Route["props"]) {
                     <div>
                         {isAdmin ? 
                         <>
-                        <div className="my-2 italic">
-                            {poll?.votesPerVoter} nominations required to start!
+                        <div className="my-2 italic text-center">
+                            <p>{numUsersNominated} of {participantCount} users have submitted nominations!</p>
+                            <p>{poll?.votesPerVoter} nominations required to start!</p>
                         </div>
                         <div className="mb-2">
                             <Button
                                 className="w-full text-center"
                                 disabled={!canVote}
-                                onClick={() => dispatch(emitSocketEvent({eventName: "start_vote"}))}
+                                onClick={handleStartVoting}
                                 >
                                 Start Voting
                             </Button>
@@ -113,7 +148,7 @@ export default function WaitingRoom({navigator}: Route["props"]) {
                         <div className="mb-2">
                             <Button 
                                 className="w-full text-center"
-                                onClick={() => setShowConfirmation(true)}>
+                                onClick={() => setShowLeaveConfirmation(true)}>
                                 Leave Poll
                             </Button>
                         </div>

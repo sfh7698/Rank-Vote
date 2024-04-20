@@ -5,7 +5,7 @@ import { Page } from "react-onsenui";
 import { Route, getErrorMessage, waitingRoomRoute } from "../utils";
 import { useState } from "react";
 import { z } from "zod";
-import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppDispatch } from "../hooks";
 import { setError } from "../app/slices/errorSlice";
 
 export default function CreatePoll({navigator}: Route["props"]) {

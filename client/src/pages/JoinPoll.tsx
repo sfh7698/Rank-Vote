@@ -5,7 +5,7 @@ import { useState } from "react"
 import { z } from "zod";
 import { useJoinPollMutation } from "../app/slices/apiSlice";
 import { Loader } from ".";
-import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppDispatch } from "../hooks";
 import { setError } from "../app/slices/errorSlice";
 
 export default function JoinPoll({navigator}: Route["props"]) {

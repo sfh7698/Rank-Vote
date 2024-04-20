@@ -1,9 +1,8 @@
 import { Page} from "react-onsenui";
-import { useAppSelector } from "../hooks/useAppSelector";
+import { useAppSelector, useAppDispatch } from "../hooks";
 import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { useState } from "react"
 import { Button, RankedNomination, ConfirmationDialog } from "../components";
-import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
 import { Route } from "../utils";
 import Results from "./ResultsPage";

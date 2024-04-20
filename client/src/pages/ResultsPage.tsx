@@ -1,9 +1,8 @@
 import { Page } from "react-onsenui";
 import { useState } from "react";
-import { useAppSelector } from "../hooks/useAppSelector";
+import { useAppSelector, useAppDispatch } from "../hooks";
 import { selectPoll, selectRankingsCount, selectParticipantCount, selectIsAdmin } from "../app/slices/pollSlice";
 import { Button, ConfirmationDialog, ResultCard } from "../components";
-import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
 
 export default function Results() {

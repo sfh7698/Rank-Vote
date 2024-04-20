@@ -1,9 +1,11 @@
 import { Page, Icon} from "react-onsenui";
 import { Route } from "../utils";
-import { useCheckConnection } from "../hooks/useCheckConnection";
+import { useCheckConnection, 
+        useInitializeSocket, 
+        useAppSelector, 
+        useAppDispatch, 
+        useWaitForVoting } from "../hooks";
 import { Loader, ParticipantPage, NominationForm } from ".";
-import { useInitializeSocket } from "../hooks/useInitializeSocket";
-import { useAppSelector } from "../hooks/useAppSelector";
 import { selectPoll, 
         selectParticipantCount, 
         selectNominationCount, 
@@ -12,9 +14,7 @@ import { selectPoll,
         selectNumUsersNominated } from "../app/slices/pollSlice";
 import { PollIdDisplay, Button, ConfirmationDialog } from "../components";
 import { useState, useRef } from "react";
-import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
-import { useWaitForVoting } from "../hooks/useWaitForVoting";
 
 export default function WaitingRoom({navigator}: Route["props"]) {
     useInitializeSocket();

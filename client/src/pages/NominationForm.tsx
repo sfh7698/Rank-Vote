@@ -1,8 +1,7 @@
 import { Page, BackButton, List, ListItem, Icon } from "react-onsenui";
 import { useState } from "react";
 import { Button, Toolbar } from "../components";
-import { useAppSelector } from "../hooks/useAppSelector";
-import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppSelector, useAppDispatch } from "../hooks";
 import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { selectPayloadFromToken } from "../app/slices/authSlice";
 import { isJwtPayload } from "../utils";

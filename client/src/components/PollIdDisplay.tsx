@@ -1,4 +1,4 @@
-import useCopy from "../hooks/useCopy";
+import { useCopy } from "../hooks";
 import { colorizeText } from "../utils";
 import { Icon } from "react-onsenui";
 

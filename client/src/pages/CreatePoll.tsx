@@ -87,11 +87,11 @@ export default function CreatePoll({navigator}: Route["props"]) {
                 </div>
                 <div className="flex flex-col items-center mt-16 space-y-4">
                     <Button 
-                        className="w-24 text-center"
+                        className="text-center"
                         disabled={!parsedFields.success}
                         onClick={handleSubmit}
                         >
-                        Create
+                        <span className="p-3">Create</span>
                     </Button>
                 </div>
             </div>

@@ -9,15 +9,19 @@ export default function ResultCard({results}: ResultCardProps) {
     return (
         <>
             <div className="border-b-2 border-solid border-gray-300 pb-2 my-2 pr-2">
-                <Row>
-                    <Col className="font-semibold">Nomination</Col>
-                    <Col className="font-semibold text-right">Score</Col>
+                <Row className="px-2">
+                    <Col>Rank</Col>
+                    <Col>Nomination</Col>
+                    <Col className="text-right">Score</Col>
                 </Row>
             </div>
             <div className="overflow-y-auto px-2">
-                {results.map((result) => 
+                {results.map((result, idx) => 
                         <Row className="my-1 shadow-lg p-3 bg-gray-100 rounded-lg border-2 border-indigo-400" key={result.nominationID}>
-                            <Col>{result.nominationText}</Col>
+                            <Col className="flex justify-between">
+                                <div className="star">{idx+1}</div>
+                                <span className="font-bold">{result.nominationText}</span>
+                            </Col>
                             <Col className="text-right">{result.score.toFixed(2)}</Col>
                         </Row>
                 )}

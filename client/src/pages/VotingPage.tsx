@@ -4,8 +4,7 @@ import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { useState } from "react"
 import { Button, RankedNomination, ConfirmationDialog } from "../components";
 import { emitSocketEvent } from "../app/socketActions";
-import { Route } from "../utils";
-import Results from "./ResultsPage";
+import { Route, resultsRoute } from "../utils";
 
 export default function VotingPage({navigator}: Route["props"]){
     const [rankings, setRankings] = useState<string[]>([]);
@@ -41,15 +40,6 @@ export default function VotingPage({navigator}: Route["props"]){
     const handleSubmitRankings = () => {
         dispatch(emitSocketEvent({eventName: "submit_rankings", data: {rankings}}));
         setShowConfirmVotes(false);
-
-        const resultsRoute: Route = {
-            props: {
-                key: "Results",
-                navigator
-            },
-            component: Results
-        }
-
         navigator?.pushPage(resultsRoute);
     }
     

@@ -6,3 +6,4 @@ export {default as Loader} from "./Loader";
 export {default as ParticipantPage} from "./ParticipantPage";
 export {default as NominationForm} from "./NominationForm";
 export {default as VotingPage} from "./VotingPage";
+export {default as Results} from "./ResultsPage";

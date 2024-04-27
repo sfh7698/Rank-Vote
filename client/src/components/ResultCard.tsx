@@ -14,13 +14,13 @@ export default function ResultCard({results}: ResultCardProps) {
                     <Col className="font-semibold text-right">Score</Col>
                 </Row>
             </div>
-            <div className="divide-y-2 overflow-y-auto pr-2 divide-gray-300">
-                {results.map((result) => (
-                    <Row key={result.nominationID} className="my-1">
-                        <Col>{result.nominationText}</Col>
-                        <Col className="text-right">{result.score.toFixed(2)}</Col>
-                    </Row>
-                ))}
+            <div className="overflow-y-auto px-2">
+                {results.map((result) => 
+                        <Row className="my-1 shadow-lg p-3 bg-gray-100 rounded-lg border-2 border-indigo-400" key={result.nominationID}>
+                            <Col>{result.nominationText}</Col>
+                            <Col className="text-right">{result.score.toFixed(2)}</Col>
+                        </Row>
+                )}
             </div>
         </>
     )

@@ -3,11 +3,13 @@ import { generalLogger, errorLogger } from "../../utils/loggers";
 import { Socket } from "socket.io";
 import { NextFunction } from "../types";
 import { getToken } from "../utils/getToken";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { sendError } from "../utils/errorHandler";
 import { SocketWithAuth} from "../types";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { isJwtPayload } from "../utils/isJWTPayload";
+import { UnknownException } from "../../utils/exceptions";
 
 export const isAdminEvent = (eventName: string) => {
     const adminEvents = ["remove_participant", "remove_nomination", "start_vote", "close_poll", "cancel_poll"];
@@ -26,18 +28,22 @@ export const authAdmin = async (socket: Socket<ClientToServerEvents, ServerToCli
     }
 
     try {
-        const payload = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
         // generalLogger.debug(`Validating admin using token payload`, payload);
 
-        const { subject, pollID } = payload;
-
-        const poll = await pollService.getPoll(pollID);
-
-        if (subject !== poll.adminID) {
-            sendError(socket, 'Admin privileges required');
-            return;
+        if(isJwtPayload(payload)) {
+            const { subject, pollID } = payload;
+    
+            const poll = await pollService.getPoll(pollID);
+    
+            if (subject !== poll.adminID) {
+                sendError(socket, 'Admin privileges required');
+                return;
+            }
+            next();
+        } else {
+            throw new UnknownException("Unknown error occured");
         }
-        next();
 
     } catch (e) {
         sendError(socket, e);

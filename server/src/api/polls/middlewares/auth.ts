@@ -1,8 +1,9 @@
 import { Response, NextFunction } from 'express';
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { errorLogger, generalLogger } from '../../../utils/loggers';
 import { RequestWithAuth } from '../types';
-import { BadRequestException, UnauthorizedException } from '../../../utils/exceptions';
+import { BadRequestException, UnauthorizedException, UnknownException } from '../../../utils/exceptions';
+import { isJwtPayload } from '../../../sockets/utils/isJWTPayload';
 
 export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFunction) => {
     generalLogger.info(`Checking for auth token on request body ${req.body}`);
@@ -20,12 +21,16 @@ export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFuncti
     }
 
     try {
-        const payload = jwt.verify(accessToken, process.env.JWT_SECRET) as JwtPayload;
+        const payload = jwt.verify(accessToken, process.env.JWT_SECRET);
 
-        req.body.userID = payload.subject;
-        req.body.pollID = payload.pollID;
-        req.body.name = payload.name;
-        next();
+        if(isJwtPayload(payload)) {
+            req.body.userID = payload.subject;
+            req.body.pollID = payload.pollID;
+            req.body.name = payload.name;
+            next();
+        } else {
+            throw new UnknownException("Unknown error ocurred");
+        }
 
     } catch (e){
         if (e instanceof(Error)) {

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { errorLogger, generalLogger } from '../../../utils/loggers';
 import { RequestWithAuth } from '../types';
 import { BadRequestException, UnauthorizedException, UnknownException } from '../../../utils/exceptions';
-import { isJwtPayload } from '../../../sockets/utils/isJWTPayload';
+import { isJwtPayload } from '../../../sockets/utils/isJwtPayload';
 
 export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFunction) => {
     generalLogger.info(`Checking for auth token on request body ${req.body}`);

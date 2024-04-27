@@ -8,7 +8,7 @@ import { sendError } from "../utils/errorHandler";
 import { SocketWithAuth} from "../types";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { isJwtPayload } from "../utils/isJWTPayload";
+import { isJwtPayload } from "../utils/isJwtPayload";
 import { UnknownException } from "../../utils/exceptions";
 
 export const isAdminEvent = (eventName: string) => {

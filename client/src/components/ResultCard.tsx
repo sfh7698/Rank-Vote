@@ -18,10 +18,10 @@ export default function ResultCard({results}: ResultCardProps) {
             <div className="overflow-y-auto px-2">
                 {results.map((result, idx) => 
                         <Row className="my-1 shadow-lg p-3 bg-gray-100 rounded-lg border-2 border-indigo-400" key={result.nominationID}>
-                            <Col className="flex justify-between">
+                            <Col>
                                 <div className="star">{idx+1}</div>
-                                <span className="font-bold">{result.nominationText}</span>
                             </Col>
+                            <Col><span className="font-bold">{result.nominationText}</span></Col>
                             <Col className="text-right">{result.score.toFixed(2)}</Col>
                         </Row>
                 )}

@@ -25,7 +25,9 @@ export default function WaitingRoom({navigator}: Route["props"]) {
 
     const [showLeaveConfirmation, setShowLeaveConfirmation] = useState(false);
     const [showStartConfirmation, setShowStartConfirmation] = useState(false);
-    const messageRef = useRef("");
+    
+    const nominatedUsersMessageRef = useRef("");
+    const leaveMessageRef = useRef("You will be kicked from the poll");
     
     const poll = useAppSelector(selectPoll);
     const participantCount = useAppSelector(selectParticipantCount);
@@ -54,13 +56,17 @@ export default function WaitingRoom({navigator}: Route["props"]) {
         component: NominationForm
     }
 
-    function sendSocketEvent() {
+    function sendStartVoteEvent() {
         dispatch(emitSocketEvent({eventName: "start_vote"}));
         setShowStartConfirmation(false);
     }
 
     function handleLeavePoll() {
-        dispatch(emitSocketEvent({eventName: "disconnect", delay: 0}));
+        if(isAdmin) {
+            dispatch(emitSocketEvent({eventName: "cancel_poll"}));
+        } else {
+            dispatch(emitSocketEvent({eventName: "disconnect", delay: 0}));
+        }
         setShowLeaveConfirmation(false);
     }
 
@@ -68,29 +74,36 @@ export default function WaitingRoom({navigator}: Route["props"]) {
         if(numUsersNominated !== participantCount) {
             const nonNominatedUsers = participantCount - numUsersNominated;
             if (nonNominatedUsers > 1) {
-                messageRef.current = `${nonNominatedUsers} users have not voted! Start Voting?`
+                nominatedUsersMessageRef.current = `${nonNominatedUsers} users have not voted! Start Voting?`
             } else {
-                messageRef.current = `${nonNominatedUsers} user has not voted!\nStart Voting?`
+                nominatedUsersMessageRef.current = `${nonNominatedUsers} user has not voted!\nStart Voting?`
             }
 
             setShowStartConfirmation(true);
             return
         }
-        sendSocketEvent();
+        sendStartVoteEvent();
+    }
+
+    function showConfirmation() {
+        if(isAdmin) {
+            leaveMessageRef.current = "If you leave, the poll will be cancelled. Proceed?"
+        }
+        setShowLeaveConfirmation(true);
     }
 
     return (
         <>
             <ConfirmationDialog
-            message="You will be kicked from the poll"
+            message={leaveMessageRef.current}
             showDialog={showLeaveConfirmation}
             onConfirm={handleLeavePoll}
             setShowDialog={setShowLeaveConfirmation}
             />
             <ConfirmationDialog
-            message={messageRef.current}
+            message={nominatedUsersMessageRef.current}
             showDialog={showStartConfirmation}
-            onConfirm={sendSocketEvent}
+            onConfirm={sendStartVoteEvent}
             setShowDialog={setShowStartConfirmation}
             />
             <Page>
@@ -148,7 +161,7 @@ export default function WaitingRoom({navigator}: Route["props"]) {
                         <div className="mb-2">
                             <Button 
                                 className="w-full text-center"
-                                onClick={() => setShowLeaveConfirmation(true)}>
+                                onClick={showConfirmation}>
                                 Leave Poll
                             </Button>
                         </div>

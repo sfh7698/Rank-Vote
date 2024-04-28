@@ -1,8 +1,7 @@
 import { Page, Icon } from "react-onsenui";
 import { Card, ConfirmationDialog, Button, Title} from "../components";
-import { useAppSelector } from "../hooks/useAppSelector";
+import { useAppSelector, useAppDispatch } from "../hooks";
 import { selectPoll, selectIsAdmin } from "../app/slices/pollSlice";
-import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
 import { useState } from "react";
 

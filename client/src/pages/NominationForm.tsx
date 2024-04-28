@@ -1,8 +1,7 @@
 import { Page, BackButton, List, ListItem, Icon } from "react-onsenui";
 import { useState } from "react";
 import { Button, Toolbar } from "../components";
-import { useAppSelector } from "../hooks/useAppSelector";
-import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppSelector, useAppDispatch } from "../hooks";
 import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { selectPayloadFromToken } from "../app/slices/authSlice";
 import { isJwtPayload } from "../utils";
@@ -31,7 +30,7 @@ export default function NominationForm() {
     const getBoxStyle = (id: string): string => {
         if (isJwtPayload(payload)) {
             if (id === payload.id) {
-                return 'bg-indigo-100'
+                return 'bg-orange-100'
             }
             return 'bg-gray-100';
         }
@@ -51,7 +50,7 @@ export default function NominationForm() {
 
     return (
         <Page renderToolbar={renderToolbar}>
-            <div className="flex flex-col px-6 items-center mb-2">
+            <div className="flex flex-col px-6 items-center h-full">
                 <p className="italic text-center text-xl font-semibold">{poll?.topic}</p>
                 <div className="mt-2 mb-3 flex flex-col w-full">
                     <label htmlFor="nomination">Enter Nomination</label>
@@ -59,19 +58,21 @@ export default function NominationForm() {
                     id="nomination"
                     rows={2}
                     maxLength={100}
-                    className="border-solid rounded border-black border py-2 px-2 w-full"
+                    className="rounded border-black border py-2 px-2 w-full"
                     value={nominationText}
                     onChange={(e) => setNominationText(e.currentTarget.value)}
                     >
                     </textarea>
                 </div>
-                <Button 
-                    disabled={!nominationText?.length}
-                    onClick={handleSubmit}>
-                    Nominate
-                </Button>
+                <div>
+                    <Button
+                        disabled={!nominationText?.length}
+                        onClick={handleSubmit}>
+                        Nominate
+                    </Button>
+                </div>
                 <h2>Nominations</h2>
-                <div className="w-full mb-2">
+                <div className="w-full mb-2 border-2 border-blue-500 rounded grow overflow-y-auto">
                     <List dataSource={Object.entries(nominations)} renderRow={([nominationID, nomination]) => 
                         <ListItem key={nominationID} className={`${getBoxStyle(nomination.userID)} rounded-md`}>
                             <div className="right">

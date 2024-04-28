@@ -1,8 +1,6 @@
 import { selectError, setError } from "../app/slices/errorSlice";
 import { Toast, Button } from "../components";
-import { useAppDispatch } from "../hooks/useAppDispatch";
-import { useAppSelector } from "../hooks/useAppSelector";
-import { useErrorDuration } from "../hooks/useErrorDuration";
+import { useAppDispatch, useAppSelector, useErrorDuration } from "../hooks";
 
 interface errorDisplayProps {
     duration?: number

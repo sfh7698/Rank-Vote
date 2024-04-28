@@ -5,7 +5,7 @@ import { useState } from "react"
 import { z } from "zod";
 import { useJoinPollMutation } from "../app/slices/apiSlice";
 import { Loader } from ".";
-import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppDispatch } from "../hooks";
 import { setError } from "../app/slices/errorSlice";
 
 export default function JoinPoll({navigator}: Route["props"]) {
@@ -73,11 +73,11 @@ export default function JoinPoll({navigator}: Route["props"]) {
                 </div>
                 <div className="flex flex-col items-center mt-16 space-y-4">
                     <Button
-                        className="w-24 text-center"
+                        className="text-center"
                         disabled={!parsedFields.success}
                         onClick={handleJoinPoll}
                         >
-                        Join Poll
+                        <span className="p-3">Join Poll</span>
                     </Button>
                 </div>
             </div>

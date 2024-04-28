@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { selectError } from "../app/slices/errorSlice";
-import { useAppDispatch } from "./useAppDispatch";
-import { useAppSelector } from "./useAppSelector";
+import { useAppDispatch, useAppSelector } from ".";
 import { emitSocketEvent } from "../app/socketActions";
 import { errorResponses } from "../app/slices/errorSlice";
 

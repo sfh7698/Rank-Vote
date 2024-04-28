@@ -1,12 +1,10 @@
 import { Page} from "react-onsenui";
-import { useAppSelector } from "../hooks/useAppSelector";
+import { useAppSelector, useAppDispatch } from "../hooks";
 import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { useState } from "react"
 import { Button, RankedNomination, ConfirmationDialog } from "../components";
-import { useAppDispatch } from "../hooks/useAppDispatch";
 import { emitSocketEvent } from "../app/socketActions";
-import { Route } from "../utils";
-import Results from "./ResultsPage";
+import { Route, resultsRoute } from "../utils";
 
 export default function VotingPage({navigator}: Route["props"]){
     const [rankings, setRankings] = useState<string[]>([]);
@@ -42,15 +40,6 @@ export default function VotingPage({navigator}: Route["props"]){
     const handleSubmitRankings = () => {
         dispatch(emitSocketEvent({eventName: "submit_rankings", data: {rankings}}));
         setShowConfirmVotes(false);
-
-        const resultsRoute: Route = {
-            props: {
-                key: "Results",
-                navigator
-            },
-            component: Results
-        }
-
         navigator?.pushPage(resultsRoute);
     }
     
@@ -63,7 +52,7 @@ export default function VotingPage({navigator}: Route["props"]){
             onConfirm={handleSubmitRankings}
             />
             <Page>
-                <div className="mx-auto flex flex-col w-full justify-between items-center h-full max-w-sm">
+                <div className="mx-auto flex flex-col w-full items-center h-full max-w-sm">
                     <div>
                         <h1 className="text-center">Voting Page</h1>
                     </div>
@@ -78,16 +67,16 @@ export default function VotingPage({navigator}: Route["props"]){
                             </div>
                         </div>
                         )}
-                        <div className="px-2">
-                            {Object.entries(poll?.nominations || {}).map(([id, nomination]) =>
-                                <RankedNomination 
-                                key={id}
-                                rank={getRank(id)}
-                                nominationText={nomination.text} 
-                                onSelect={() => toggleNomination(id)}                            
-                                /> 
-                            )}
-                        </div>
+                    </div>
+                    <div className="px-2 overflow-y-auto w-full">
+                        {Object.entries(poll?.nominations || {}).map(([id, nomination]) =>
+                            <RankedNomination 
+                            key={id}
+                            rank={getRank(id)}
+                            nominationText={nomination.text} 
+                            onSelect={() => toggleNomination(id)}                            
+                            /> 
+                        )}
                     </div>
                     <div className="mx-auto flex flex-col items-center">
                         <div className="my-2">

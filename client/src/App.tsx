@@ -1,10 +1,9 @@
 import React from "react";
 import { Navigator } from "react-onsenui";
 import { Route, waitingRoomRoute } from "./utils";
-import { useAppSelector } from "./hooks/useAppSelector";
+import { useAppSelector, useSetToken } from "./hooks";
 import { selectPayloadFromToken } from "./app/slices/authSlice";
 import { ErrorDisplay } from "./components";
-import { useSetToken } from "./hooks/useSetToken";
 import { isJwtPayload } from "./utils";
 import { Home } from "./pages";
 

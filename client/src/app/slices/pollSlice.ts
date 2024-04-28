@@ -59,4 +59,15 @@ export const selectRankingsCount = createSelector(pollSlice.selectors.selectPoll
     return Object.keys(poll?.rankings ?? {}).length;
 });
 
+export const selectNumUsersNominated = createSelector(pollSlice.selectors.selectPoll, (poll) => {
+    const usersNominated: string[] = [];
+
+    Object.values(poll?.nominations ?? {}).forEach(({userID}) => {
+        if(!usersNominated.includes(userID)) {
+            usersNominated.push(userID);
+        }
+    });
+    return usersNominated.length;
+})
+
 export default pollSlice.reducer;

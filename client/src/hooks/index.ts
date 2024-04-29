@@ -6,3 +6,4 @@ export * from "./useErrorDuration";
 export * from "./useInitializeSocket";
 export * from "./useSetToken";
 export * from "./useWaitForVoting";
+export * from "./useWaitForResults";

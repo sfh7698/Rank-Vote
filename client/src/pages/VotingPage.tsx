@@ -1,5 +1,5 @@
-import { Page} from "react-onsenui";
-import { useAppSelector, useAppDispatch } from "../hooks";
+import { Page } from "react-onsenui";
+import { useAppSelector, useAppDispatch, useWaitForResults } from "../hooks";
 import { selectIsAdmin, selectPoll } from "../app/slices/pollSlice";
 import { useState } from "react"
 import { Button, RankedNomination, ConfirmationDialog } from "../components";
@@ -7,6 +7,9 @@ import { emitSocketEvent } from "../app/socketActions";
 import { Route, resultsRoute } from "../utils";
 
 export default function VotingPage({navigator}: Route["props"]){
+
+    useWaitForResults();
+
     const [rankings, setRankings] = useState<string[]>([]);
     const [showConfirmVotes, setShowConfirmVotes] = useState(false);
     const [showConfirmCancel, setShowConfirmCancel] = useState(false);

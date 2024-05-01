@@ -10,7 +10,7 @@ export function useWaitForVoting(navigator: Navigator | undefined) {
     
     useEffect(() => {
         if (poll?.hasStarted) {
-            if(Array.from(poll.results).length === 0) {
+            if(Object.keys(poll.results).length === 0) {
                 const votingPageRoute: Route = {
                     props: {
                         key: "VotingPage",

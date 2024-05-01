@@ -16,7 +16,9 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
     },
     effect: async (_, {getState, dispatch}) => {
 
-        const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io("http://localhost:8080/polls", {
+        const url = import.meta.env.VITE_SOCKET_URL || "http://localhost:8080/polls";
+
+        const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(url, {
             auth: {
                 token: getState().auth.accessToken
             }

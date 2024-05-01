@@ -7,6 +7,7 @@ import { BadRequestException, UnknownException } from "../../utils/exceptions";
 import { SocketWithAuth} from "../types";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { isJwtPayload } from "../utils/isJwtPayload";
 
 // (createTokenMiddleware)
 export const verifyToken = (socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>, 
@@ -26,16 +27,20 @@ export const verifyToken = (socket: Socket<ClientToServerEvents, ServerToClientE
         return;
     }
     
-    // generalLogger.info(`Validating auth token before connection: ${token}`);
+    generalLogger.info(`Validating auth token before connection: ${token}`);
     
     try {
-        const payload = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Figure out how to type the following
-        socket.data.userID = payload.subject;
-        socket.data.pollID = payload.pollID;
-        socket.data.name = payload.name;
-        next();
+        if(isJwtPayload(payload)) {
+            socket.data.userID = payload.subject;
+            socket.data.pollID = payload.pollID;
+            socket.data.name = payload.name;
+            next();
+        } else {
+            errorLogger.error("JWT payload not verified in verifyToken");
+            throw new UnknownException("Unknown error occurred");
+        }
 
     } catch (e) {
         next(e);

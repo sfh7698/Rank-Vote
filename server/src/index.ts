@@ -18,7 +18,8 @@ pollsNameSpace.use(verifyToken).on('connection', onConnection);
 const port = process.env.PORT || 3000;
 
 server.listen(port, () => {
-    generalLogger.info(`Server is running at http://localhost:${port}`);
+    const server = process.env.SERVER_DOMAIN || `http://localhost:${port}`
+    generalLogger.info(`Server is running at ${server}`);
 });
 
 export default pollsNameSpace;

@@ -52,7 +52,7 @@ export default class PollService {
         try {
             const createdPoll = await this.pollRepository.createPoll({...fields, pollID, userID});
     
-            // generalLogger.info( `Creating token string for pollID: ${createdPoll.id} and userID: ${userID}`);
+            generalLogger.info( `Creating token string for pollID: ${createdPoll.id} and userID: ${userID}`);
     
             const signedString = generateToken(userID, createdPoll.id, fields.name);
     
@@ -69,7 +69,7 @@ export default class PollService {
     joinPoll = async (fields: JoinPollFields): Promise<PollServiceFields | null> => {
         const userID = createUserID();
 
-        // generalLogger.info(`Fetching poll with ID: ${fields.pollID} for user with ID: ${userID}`);
+        generalLogger.info(`Fetching poll with ID: ${fields.pollID} for user with ID: ${userID}`);
 
         try {
             const joinedPoll = await this.pollRepository.getPoll(fields.pollID);
@@ -78,7 +78,7 @@ export default class PollService {
                 return null;
             }
     
-            // generalLogger.info(`Creating token string for pollID: ${joinedPoll.id} and userID: ${userID}`);
+            generalLogger.info(`Creating token string for pollID: ${joinedPoll.id} and userID: ${userID}`);
     
             const signedString = generateToken(userID, joinedPoll.id, fields.name);
     
@@ -93,7 +93,7 @@ export default class PollService {
     };
 
     rejoinPoll = async (fields: RejoinPollFields) : Promise<Poll> => {
-        // generalLogger.info(`Rejoining poll with ID: ${fields.pollID} for user with ID: ${fields.userID} with name: ${fields.name}`);
+        generalLogger.info(`Rejoining poll with ID: ${fields.pollID} for user with ID: ${fields.userID} with name: ${fields.name}`);
         try {
             return await this.pollRepository.addParticipant(fields);
         } catch(e) {

@@ -27,7 +27,7 @@ export default class PollsRepository {
             hasStarted: false
         }
 
-        // generalLogger.info(`Creating new poll: ${JSON.stringify(initialPoll, null, 2)} with TTL ${this.ttl}`);
+        generalLogger.info(`Creating new poll: ${JSON.stringify(initialPoll, null, 2)} with TTL ${this.ttl}`);
 
         const key = this.getKey(pollID);
 
@@ -41,19 +41,18 @@ export default class PollsRepository {
 
         } catch (e) {
             errorLogger.error(e);
-            // throw new Error();
             throw new UnknownException(`Failed to add poll ${JSON.stringify(initialPoll)}`);
         }
     }
 
     getPoll = async (pollID: string): Promise<Poll> => {
-        // generalLogger.info(`Attempting to get poll with: ${pollID}`);
+        generalLogger.info(`Attempting to get poll with: ${pollID}`);
 
         const key = this.getKey(pollID);
 
         try {
             const currentPoll = await redisClient.call('JSON.GET', key, '.') as string;
-            // generalLogger.verbose(currentPoll);
+            generalLogger.verbose(currentPoll);
 
             // if (currentPoll?.hasStarted) {
             //     throw new Error;
@@ -67,7 +66,7 @@ export default class PollsRepository {
     }
 
     addParticipant = async({pollID, userID, name}: AddParticipantData): Promise<Poll> => {
-        // generalLogger.info(`Attempting to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
+        generalLogger.info(`Attempting to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
 
         const key = this.getKey(pollID);
         const participantPath = `.participants.${userID}`;
@@ -77,7 +76,7 @@ export default class PollsRepository {
 
             const poll = await this.getPoll(pollID);
 
-            // generalLogger.info( `Current Participants for pollID: ${pollID}: ${poll.participants}`);
+            generalLogger.info( `Current Participants for pollID: ${pollID}: ${poll.participants}`);
 
             return poll;
 
@@ -88,7 +87,7 @@ export default class PollsRepository {
     }
 
     removeParticipant = async(pollID: string, userID: string): Promise<Poll> => {
-        // generalLogger.debug(`removing userID: ${userID} from poll: ${pollID}`);
+        generalLogger.debug(`removing userID: ${userID} from poll: ${pollID}`);
         const key = this.getKey(pollID);
         const participantPath = `.participants.${userID}`;
 

@@ -17,8 +17,8 @@ redisClient.on('error', (err) => {
     errorLogger.error('Redis connection error:', err);
 });
 
-// redisClient.on('ready', () => {
-//     generalLogger.info('Redis client is ready');
-// });
+redisClient.on('ready', () => {
+    generalLogger.info('Redis client is ready');
+});
 
 export default redisClient;

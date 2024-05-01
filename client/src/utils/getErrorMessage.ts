@@ -8,6 +8,6 @@ export default function getErrorMessage(e: unknown) {
     if(isApiError(e)) {
         return e.data.message;
     } else {
-        return "Unknown Error Occured"
+        return "Unknown Error Occurred"
     }
 }

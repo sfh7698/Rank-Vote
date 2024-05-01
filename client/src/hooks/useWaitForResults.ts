@@ -13,7 +13,7 @@ export function useWaitForResults() {
     const dispatch = useAppDispatch();
     
     useEffect(() => {
-        if(poll?.results && Array.from(poll?.results).length > 0 && isJwtPayload(payload) && !usersHaveRanked.includes(payload.id)) {
+        if(poll?.results && Object.keys(poll?.results).length > 0 && isJwtPayload(payload) && !usersHaveRanked.includes(payload.id)) {
             dispatch(setError("Admin has ended voting"));
             const timeout = setTimeout(() => {
                 location.reload()

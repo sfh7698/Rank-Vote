@@ -112,11 +112,14 @@ export default class PollService {
 
     removeParticipant = async(pollID: string, userID: string): Promise<Poll | void> => {
         try {
-            const poll = await this.pollRepository.getPoll(pollID);
     
-            if(!poll.hasStarted) {
-                return await this.pollRepository.removeParticipant(pollID, userID);
+            const poll = await this.pollRepository.removeParticipant(pollID, userID);
+
+            if (Object.keys(poll.participants).length === 0) {
+                this.pollRepository.deletePoll(pollID);
             }
+
+            return poll;
 
         } catch(e) {
             throw e;

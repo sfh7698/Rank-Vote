@@ -1,12 +1,12 @@
-import { generalLogger } from '../utils/loggers';
-import pollHandlers from './poll.gateway';
-import middlewares from './middlewares';
-import io from '../index';
+import { generalLogger } from '../utils/loggers.js';
+import pollHandlers from './poll.gateway.js';
+import middlewares from './middlewares/index.js';
+import io from '../index.js';
 import { Socket } from 'socket.io';
-import PollService from '../api/polls/poll.service';
-import { sendError } from './utils/errorHandler';
+import PollService from '../api/polls/poll.service.js';
+import { sendError } from './utils/errorHandler.js';
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { SocketWithAuth} from "./types";
+import { SocketWithAuth} from "./types.js";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 
 

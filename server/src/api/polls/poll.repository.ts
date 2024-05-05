@@ -1,6 +1,6 @@
-import redisClient from '../../redis/redis';
-import { UnknownException } from "../../utils/exceptions";
-import { errorLogger, generalLogger } from '../../utils/loggers';
+import redisClient from '../../redis/redis.js';
+import { UnknownException } from "../../utils/exceptions.js";
+import { errorLogger, generalLogger } from '../../utils/loggers.js';
 import { AddParticipantData, 
         CreatePollData,
         AddNominationData,

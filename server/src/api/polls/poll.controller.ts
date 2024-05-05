@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreatePollFields, JoinPollFields, PollResponse, RequestWithAuth } from './types';
+import { CreatePollFields, JoinPollFields, PollResponse, RequestWithAuth } from './types.js';
 import { Poll } from 'shared';
-import PollService from './poll.service';
-import { BadRequestException } from "../../utils/exceptions";
+import PollService from './poll.service.js';
+import { BadRequestException } from "../../utils/exceptions.js";
 
 export default class PollController {
 

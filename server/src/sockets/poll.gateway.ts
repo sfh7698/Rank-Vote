@@ -1,9 +1,9 @@
 import { Namespace, Socket } from 'socket.io';
-import { generalLogger } from '../utils/loggers';
-import PollService from '../api/polls/poll.service';
-import { SocketWithAuth } from './types';
+import { generalLogger } from '../utils/loggers.js';
+import PollService from '../api/polls/poll.service.js';
+import { SocketWithAuth } from './types.js';
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
-import { sendError } from './utils/errorHandler';
+import { sendError } from './utils/errorHandler.js';
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 class PollHandlers implements ClientToServerEvents {

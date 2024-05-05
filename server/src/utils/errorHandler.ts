@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ValidationError } from "express-validation";
-import { errorLogger } from "./loggers";
-import { Exception } from "./exceptions";
+import { errorLogger } from "./loggers.js";
+import { Exception } from "./exceptions.js";
 
 export const apiErrorhandler = (err: Error, _: Request, res: Response, __: NextFunction) => {
     if(err instanceof ValidationError) {

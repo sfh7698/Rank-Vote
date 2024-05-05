@@ -1,9 +1,9 @@
 import { Response, NextFunction } from 'express';
 import jwt from "jsonwebtoken";
-import { errorLogger, generalLogger } from '../../../utils/loggers';
-import { RequestWithAuth } from '../types';
-import { BadRequestException, UnauthorizedException, UnknownException } from '../../../utils/exceptions';
-import { isJwtPayload } from '../../../sockets/utils/isJwtPayload';
+import { errorLogger, generalLogger } from '../../../utils/loggers.js';
+import { RequestWithAuth } from '../types.js';
+import { BadRequestException, UnauthorizedException, UnknownException } from '../../../utils/exceptions.js';
+import { isJwtPayload } from '../../../sockets/utils/isJwtPayload.js';
 
 export const authRejoin = (req: RequestWithAuth, res: Response, next: NextFunction) => {
     generalLogger.info(`Checking for auth token on request body ${req.body}`);

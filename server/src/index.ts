@@ -1,12 +1,12 @@
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { generalLogger } from './utils/loggers';
+import { generalLogger } from './utils/loggers.js';
 import { SocketWithAuth } from './sockets/types';
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
-import { verifyToken } from './sockets/middlewares/verifyToken';
-import onConnection from './sockets';
-import app, {corsOptions} from './app';
+import { verifyToken } from './sockets/middlewares/verifyToken.js';
+import onConnection from './sockets/index.js';
+import app, {corsOptions} from './app.js';
 
 const server = createServer(app);
 

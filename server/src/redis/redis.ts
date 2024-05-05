@@ -1,6 +1,6 @@
 import IORedis, { Redis, RedisOptions } from 'ioredis';
-import { config } from './config';
-import { errorLogger, generalLogger } from '../utils/loggers';
+import { config } from './config.js';
+import { errorLogger, generalLogger } from '../utils/loggers.js';
 
 const connectionOptions: RedisOptions = {
     host: config.redisHost,

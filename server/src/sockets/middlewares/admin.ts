@@ -1,15 +1,15 @@
-import PollService from "../../api/polls/poll.service";
-import { generalLogger, errorLogger } from "../../utils/loggers";
+import PollService from "../../api/polls/poll.service.js";
+import { generalLogger, errorLogger } from "../../utils/loggers.js";
 import { Socket } from "socket.io";
-import { NextFunction } from "../types";
-import { getToken } from "../utils/getToken";
+import { NextFunction } from "../types.js";
+import { getToken } from "../utils/getToken.js";
 import jwt from "jsonwebtoken";
-import { sendError } from "../utils/errorHandler";
-import { SocketWithAuth} from "../types";
+import { sendError } from "../utils/errorHandler.js";
+import { SocketWithAuth} from "../types.js";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { isJwtPayload } from "../utils/isJwtPayload";
-import { UnknownException } from "../../utils/exceptions";
+import { isJwtPayload } from "../utils/isJwtPayload.js";
+import { UnknownException } from "../../utils/exceptions.js";
 
 export const isAdminEvent = (eventName: string) => {
     const adminEvents = ["remove_participant", "remove_nomination", "start_vote", "close_poll", "cancel_poll"];

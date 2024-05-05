@@ -1,13 +1,13 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { generalLogger, errorLogger } from "../../utils/loggers";
+import { generalLogger, errorLogger } from "../../utils/loggers.js";
 import { Socket } from "socket.io";
-import { NextFunction } from "../types";
-import { getToken } from "../utils/getToken";
-import { BadRequestException, UnknownException } from "../../utils/exceptions";
-import { SocketWithAuth} from "../types";
+import { NextFunction } from "../types.js";
+import { getToken } from "../utils/getToken.js";
+import { BadRequestException, UnknownException } from "../../utils/exceptions.js";
+import { SocketWithAuth} from "../types.js";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { isJwtPayload } from "../utils/isJwtPayload";
+import { isJwtPayload } from "../utils/isJwtPayload.js";
 
 // (createTokenMiddleware)
 export const verifyToken = (socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>, 

@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { SocketWithAuth} from "../types";
+import { SocketWithAuth} from "../types.js";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 
 export const getToken = (socket: Socket<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>): string => {

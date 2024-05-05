@@ -1,9 +1,9 @@
 import { Namespace, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { authAdmin, isAdminEvent } from './admin';
-import { nominateSchema } from '../middlewares/validate';
-import { sendError } from "../utils/errorHandler";
-import { SocketWithAuth} from "../types";
+import { authAdmin, isAdminEvent } from './admin.js';
+import { nominateSchema } from '../middlewares/validate.js';
+import { sendError } from "../utils/errorHandler.js";
+import { SocketWithAuth} from "../types.js";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 
 export default (_: Namespace<ClientToServerEvents, ServerToClientEvents, DefaultEventsMap, SocketWithAuth>, 

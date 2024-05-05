@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
-import { Exception } from "../../utils/exceptions";
-import { SocketWithAuth} from "../types";
+import { Exception } from "../../utils/exceptions.js";
+import { SocketWithAuth} from "../types.js";
 import {ClientToServerEvents, ServerToClientEvents} from "shared";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 

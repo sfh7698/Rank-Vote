@@ -2,9 +2,9 @@ import express, { Express } from 'express';
 import cors, {CorsOptions} from 'cors';
 import morgan from 'morgan';
 import fs from 'fs';
-import { filename } from './utils/loggers';
-import api from './api';
-import { apiErrorhandler } from './utils/errorHandler';
+import { filename } from './utils/loggers.js';
+import api from './api/index.js';
+import { apiErrorhandler } from './utils/errorHandler.js';
 
 const app: Express = express();
 

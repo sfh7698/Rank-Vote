@@ -1,4 +1,4 @@
-import { createPollID, createUserID, createNominationID } from "../../utils/ids";
+import { createPollID, createUserID, createNominationID } from "../../utils/ids.js";
 import { 
     CreatePollFields, 
     JoinPollFields, 
@@ -6,12 +6,12 @@ import {
     PollServiceFields,
     AddParticipantFields,
     AddNominationFields,
-    SubmitRankingsFields} from "./types";
+    SubmitRankingsFields} from "./types.js";
 import { Poll, Rankings, Nominations, Results } from "shared";
-import PollsRepository from "./poll.repository";
-import { generalLogger } from "../../utils/loggers";
-import generateToken  from "../../utils/generateToken"
-import { UnauthorizedException } from "../../utils/exceptions";
+import PollsRepository from "./poll.repository.js";
+import { generalLogger } from "../../utils/loggers.js";
+import generateToken  from "../../utils/generateToken.js"
+import { UnauthorizedException } from "../../utils/exceptions.js";
 
 export default class PollService {
     private readonly pollRepository: PollsRepository;

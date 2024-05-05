@@ -8,14 +8,12 @@ import { apiErrorhandler } from './utils/errorHandler.js';
 
 const app: Express = express();
 
-const logStream = fs.createWriteStream(filename, {flags: 'a'});
-
 export const corsOptions: CorsOptions = {
   origin: process.env.CLIENT_DOMAIN || 'http://localhost:5173',
   exposedHeaders: ['Authorization']
 };
 
-const stream = process.env.NODE_ENV === 'development' ? process.stdout : logStream;
+const stream = process.env.NODE_ENV === 'development' ? process.stdout : fs.createWriteStream(filename, {flags: 'a'});
 
 app.use(cors(corsOptions));
 app.use(express.json());

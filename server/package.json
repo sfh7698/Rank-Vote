@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "private":"true",
+  "type": "module",
   "scripts": {
     "build": "npx tsc",
     "docker:compose": "docker-compose up -d",

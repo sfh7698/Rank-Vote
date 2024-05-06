@@ -32,11 +32,13 @@ export default class PollsRepository {
         const key = this.getKey(pollID);
 
         try {
+            console.log("Trying to set poll...");
             await redisClient.multi([
                 ['send_command', 'JSON.SET', key, '.', JSON.stringify(initialPoll)],
                 ['expire', key, this.ttl],
             ])
             .exec();
+            console.log("poll set successfully!");
             return initialPoll;
 
         } catch (e) {

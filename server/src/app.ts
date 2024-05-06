@@ -7,7 +7,7 @@ import api from './api/index.js';
 import { apiErrorhandler } from './utils/errorHandler.js';
 
 const app: Express = express();
-
+console.log(process.env.CLIENT_DOMAIN);
 export const corsOptions: CorsOptions = {
   origin: process.env.CLIENT_DOMAIN || 'http://localhost:5173',
   exposedHeaders: ['Authorization']

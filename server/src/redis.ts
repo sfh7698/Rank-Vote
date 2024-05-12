@@ -1,13 +1,7 @@
-import IORedis, { Redis, RedisOptions } from 'ioredis';
-import { config } from './config.js';
-import { errorLogger, generalLogger } from '../utils/loggers.js';
+import Redis from 'ioredis';
+import { errorLogger, generalLogger } from './utils/loggers.js';
 
-const connectionOptions: RedisOptions = {
-    host: config.redisHost,
-    port: config.redisPort
-};
-
-const redisClient: Redis = new IORedis(connectionOptions);
+const redisClient = new Redis(process.env.REDIS_URL || "redis://localhost:6379");
 
 redisClient.on('connect', () => {
     generalLogger.info(`Connected to Redis on ${redisClient.options.host}:${redisClient.options.port}`);

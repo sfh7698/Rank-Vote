@@ -1,4 +1,4 @@
-import redisClient from '../../redis/redis.js';
+import redisClient from '../../redis.js';
 import { UnknownException } from "../../utils/exceptions.js";
 import { errorLogger, generalLogger } from '../../utils/loggers.js';
 import { AddParticipantData, 
@@ -8,10 +8,18 @@ import { AddParticipantData,
 import { Poll, Results } from 'shared';
 
 export default class PollsRepository {
-    private readonly ttl = process.env.POLL_DURATION;
+    private readonly ttl = process.env.POLL_DURATION || "7200";
 
     private getKey = (pollID: string) => {
         return `polls:${pollID}`
+    }
+
+    private setPoll = async (poll: Poll) => {
+        await redisClient.setex(this.getKey(poll.id), await this.getTTL(poll.id), JSON.stringify(poll));
+    }
+
+    private getTTL = async(pollID: string) => {
+        return await redisClient.ttl(this.getKey(pollID));
     }
 
     createPoll = async ({votesPerVoter, topic, pollID, userID }: CreatePollData): Promise<Poll> => {
@@ -29,16 +37,8 @@ export default class PollsRepository {
 
         generalLogger.info(`Creating new poll: ${JSON.stringify(initialPoll, null, 2)} with TTL ${this.ttl}`);
 
-        const key = this.getKey(pollID);
-
         try {
-            console.log("Trying to set poll...");
-            await redisClient.multi([
-                ['send_command', 'JSON.SET', key, '.', JSON.stringify(initialPoll)],
-                ['expire', key, this.ttl],
-            ])
-            .exec();
-            console.log("poll set successfully!");
+            await redisClient.setex(this.getKey(pollID), this.ttl, JSON.stringify(initialPoll));
             return initialPoll;
 
         } catch (e) {
@@ -53,8 +53,8 @@ export default class PollsRepository {
         const key = this.getKey(pollID);
 
         try {
-            const currentPoll = await redisClient.call('JSON.GET', key, '.') as string;
-            generalLogger.verbose(currentPoll);
+            const currentPoll = await redisClient.get(key) || "";
+            // generalLogger.verbose(currentPoll);
 
             // if (currentPoll?.hasStarted) {
             //     throw new Error;
@@ -70,15 +70,12 @@ export default class PollsRepository {
     addParticipant = async({pollID, userID, name}: AddParticipantData): Promise<Poll> => {
         generalLogger.info(`Attempting to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
 
-        const key = this.getKey(pollID);
-        const participantPath = `.participants.${userID}`;
-
         try {
-            await redisClient.call('JSON.SET', key, participantPath, JSON.stringify(name));
-
             const poll = await this.getPoll(pollID);
+            poll.participants[userID] = name;
+            await this.setPoll(poll);
 
-            generalLogger.info( `Current Participants for pollID: ${pollID}: ${poll.participants}`);
+            generalLogger.info( `Current Participants for pollID: ${pollID}: ${JSON.stringify(poll.participants)}`);
 
             return poll;
 
@@ -90,12 +87,12 @@ export default class PollsRepository {
 
     removeParticipant = async(pollID: string, userID: string): Promise<Poll> => {
         generalLogger.debug(`removing userID: ${userID} from poll: ${pollID}`);
-        const key = this.getKey(pollID);
-        const participantPath = `.participants.${userID}`;
 
         try {
-            await redisClient.call('JSON.DEL', key, participantPath);
-            return await this.getPoll(pollID);
+            const poll = await this.getPoll(pollID);
+            delete poll.participants[userID];
+            await this.setPoll(poll);
+            return poll;
 
         } catch (e) {
             errorLogger.error(e);
@@ -107,12 +104,11 @@ export default class PollsRepository {
     addNomination = async({pollID, nominationID, nomination}: AddNominationData): Promise<Poll> => {
         generalLogger.info(`Attempting to add a nomination with nominationID/nomination: ${nominationID}/${nomination.text} to pollID: ${pollID}`);
 
-        const key = this.getKey(pollID);
-        const nominationPath = `.nominations.${nominationID}`;
-
         try {
-            await redisClient.call('JSON.SET', key, nominationPath, JSON.stringify(nomination));
-            return this.getPoll(pollID);
+            const poll = await this.getPoll(pollID);
+            poll.nominations[nominationID] = nomination;
+            await this.setPoll(poll);
+            return poll;
 
         } catch(e) {
             errorLogger.error(e);
@@ -123,12 +119,11 @@ export default class PollsRepository {
     removeNomination = async(pollID: string, nominationID: string): Promise<Poll> => {
         generalLogger.info(`removing nominationID: ${nominationID} from poll: ${pollID}`);
 
-        const key = this.getKey(pollID);
-        const nominationPath = `.nominations.${nominationID}`;
-
         try {
-            await redisClient.call('JSON.DEL', key, nominationPath);
-            return this.getPoll(pollID);
+            const poll = await this.getPoll(pollID);
+            delete poll.nominations[nominationID];
+            await this.setPoll(poll);
+            return poll;
 
         } catch(e) {
             errorLogger.error(e);
@@ -139,12 +134,12 @@ export default class PollsRepository {
     startPoll = async(pollID: string): Promise<Poll> => {
         generalLogger.info(`setting hasStarted for poll: ${pollID}`);
 
-        const key = this.getKey(pollID);
 
         try {
-            await redisClient.call('JSON.SET', key, '.hasStarted', JSON.stringify(true));
-
-            return this.getPoll(pollID);
+            const poll = await this.getPoll(pollID);
+            poll.hasStarted = true;
+            await this.setPoll(poll);
+            return poll;
 
         } catch(e) {
             errorLogger.error(e);
@@ -155,13 +150,11 @@ export default class PollsRepository {
     addParticipantRankings = async({ pollID, userID, rankings }: AddParticipantRankingsData): Promise<Poll> => {
         generalLogger.info(`Attempting to add rankings for userID/name: ${userID} to pollID: ${pollID}`, rankings);
 
-        const key = this.getKey(pollID);
-        const rankingsPath = `.rankings.${userID}`;
-
         try {
-            await redisClient.call('JSON.SET', key, rankingsPath, JSON.stringify(rankings));
-
-            return this.getPoll(pollID);
+            const poll = await this.getPoll(pollID);
+            poll.rankings[userID] = rankings;
+            await this.setPoll(poll);
+            return poll;
 
         } catch(e) {
             errorLogger.error(e);
@@ -175,13 +168,11 @@ export default class PollsRepository {
         const resultsString = JSON.stringify(results);
         generalLogger.debug(`attempting to add results to pollID: ${pollID}`, resultsString);
 
-        const key = this.getKey(pollID);
-        const resultsPath = `.results`;
-
         try {
-            await redisClient.call('JSON.SET', key, resultsPath, resultsString);
-
-            return this.getPoll(pollID);
+            const poll = await this.getPoll(pollID);
+            poll.results = results;
+            await this.setPoll(poll);
+            return poll;
 
         } catch(e){
             errorLogger.error(e);
@@ -195,7 +186,7 @@ export default class PollsRepository {
         generalLogger.info(`deleting poll: ${pollID}`);
 
         try {
-            await redisClient.call('JSON.DEL', key);
+            await redisClient.del(key);
 
         } catch(e) {
             errorLogger.error(e);

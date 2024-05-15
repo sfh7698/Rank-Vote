@@ -35,8 +35,8 @@ export const authAdmin = async (socket: Socket<ClientToServerEvents, ServerToCli
             const { subject, pollID } = payload;
     
             const poll = await pollService.getPoll(pollID);
-    
-            if (subject !== poll.adminID) {
+
+            if(poll && subject !== poll.adminID) {
                 sendError(socket, 'Admin privileges required');
                 return;
             }

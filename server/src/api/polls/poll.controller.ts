@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreatePollFields, JoinPollFields, PollResponse, RequestWithAuth } from './types.js';
-import { Poll } from 'shared';
+import { CreatePollFields, JoinPollFields, PollResponse } from './types.js';
 import PollService from './poll.service.js';
 import { BadRequestException } from "../../utils/exceptions.js";
 
@@ -49,23 +48,4 @@ export default class PollController {
             throw e;
         }
     };
-
-    rejoinPoll = async (req: RequestWithAuth, res: Response<Poll>) => {
-        const { userID, pollID, name } = req.body;
-        try {
-            const result = await this.pollService.rejoinPoll({
-                name,
-                pollID,
-                userID,
-            });
-    
-            res.status(201).json(result);
-
-        } catch(e) {
-            throw e;
-        }
-
-    };
-
-
 }

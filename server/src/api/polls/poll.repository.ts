@@ -47,37 +47,38 @@ export default class PollsRepository {
         }
     }
 
-    getPoll = async (pollID: string): Promise<Poll> => {
+    getPoll = async (pollID: string): Promise<Poll | undefined> => {
         generalLogger.info(`Attempting to get poll with: ${pollID}`);
 
         const key = this.getKey(pollID);
 
         try {
-            const currentPoll = await redisClient.get(key) || "";
-            // generalLogger.verbose(currentPoll);
+            const currentPoll = await redisClient.get(key);
+            generalLogger.verbose(currentPoll);
+            
+            if(currentPoll){
+                return JSON.parse(currentPoll);
+            }
 
-            // if (currentPoll?.hasStarted) {
-            //     throw new Error;
-            // }
-
-            return JSON.parse(currentPoll);
         } catch (e) {
             errorLogger.error(e);
             throw new UnknownException(`Failed to get pollID ${pollID}`);
         }
     }
 
-    addParticipant = async({pollID, userID, name}: AddParticipantData): Promise<Poll> => {
+    addParticipant = async({pollID, userID, name}: AddParticipantData): Promise<Poll | undefined> => {
         generalLogger.info(`Attempting to add a participant with userID/name: ${userID}/${name} to pollID: ${pollID}`);
 
         try {
             const poll = await this.getPoll(pollID);
-            poll.participants[userID] = name;
-            await this.setPoll(poll);
-
-            generalLogger.info( `Current Participants for pollID: ${pollID}: ${JSON.stringify(poll.participants)}`);
-
-            return poll;
+            if(poll) {
+                poll.participants[userID] = name;
+                await this.setPoll(poll);
+    
+                generalLogger.info( `Current Participants for pollID: ${pollID}: ${JSON.stringify(poll.participants)}`);
+    
+                return poll;
+            }
 
         } catch (e) {
             errorLogger.error(e);
@@ -85,14 +86,17 @@ export default class PollsRepository {
         }
     }
 
-    removeParticipant = async(pollID: string, userID: string): Promise<Poll> => {
+    removeParticipant = async(pollID: string, userID: string): Promise<Poll | undefined> => {
         generalLogger.debug(`removing userID: ${userID} from poll: ${pollID}`);
 
         try {
             const poll = await this.getPoll(pollID);
-            delete poll.participants[userID];
-            await this.setPoll(poll);
-            return poll;
+
+            if (poll) {
+                delete poll.participants[userID];
+                await this.setPoll(poll);
+                return poll;
+            } 
 
         } catch (e) {
             errorLogger.error(e);
@@ -101,14 +105,16 @@ export default class PollsRepository {
         }
     }
 
-    addNomination = async({pollID, nominationID, nomination}: AddNominationData): Promise<Poll> => {
+    addNomination = async({pollID, nominationID, nomination}: AddNominationData): Promise<Poll | undefined> => {
         generalLogger.info(`Attempting to add a nomination with nominationID/nomination: ${nominationID}/${nomination.text} to pollID: ${pollID}`);
 
         try {
             const poll = await this.getPoll(pollID);
-            poll.nominations[nominationID] = nomination;
-            await this.setPoll(poll);
-            return poll;
+            if(poll) {
+                poll.nominations[nominationID] = nomination;
+                await this.setPoll(poll);
+                return poll;
+            }
 
         } catch(e) {
             errorLogger.error(e);
@@ -116,14 +122,16 @@ export default class PollsRepository {
         }
     }
 
-    removeNomination = async(pollID: string, nominationID: string): Promise<Poll> => {
+    removeNomination = async(pollID: string, nominationID: string): Promise<Poll | undefined> => {
         generalLogger.info(`removing nominationID: ${nominationID} from poll: ${pollID}`);
 
         try {
             const poll = await this.getPoll(pollID);
-            delete poll.nominations[nominationID];
-            await this.setPoll(poll);
-            return poll;
+            if(poll) {
+                delete poll.nominations[nominationID];
+                await this.setPoll(poll);
+                return poll;
+            }
 
         } catch(e) {
             errorLogger.error(e);
@@ -131,15 +139,17 @@ export default class PollsRepository {
         }
     }
 
-    startPoll = async(pollID: string): Promise<Poll> => {
+    startPoll = async(pollID: string): Promise<Poll | undefined> => {
         generalLogger.info(`setting hasStarted for poll: ${pollID}`);
 
 
         try {
             const poll = await this.getPoll(pollID);
-            poll.hasStarted = true;
-            await this.setPoll(poll);
-            return poll;
+            if(poll) {
+                poll.hasStarted = true;
+                await this.setPoll(poll);
+                return poll;
+            }
 
         } catch(e) {
             errorLogger.error(e);
@@ -147,14 +157,16 @@ export default class PollsRepository {
         }
     }
     
-    addParticipantRankings = async({ pollID, userID, rankings }: AddParticipantRankingsData): Promise<Poll> => {
+    addParticipantRankings = async({ pollID, userID, rankings }: AddParticipantRankingsData): Promise<Poll | undefined> => {
         generalLogger.info(`Attempting to add rankings for userID/name: ${userID} to pollID: ${pollID}`, rankings);
 
         try {
             const poll = await this.getPoll(pollID);
-            poll.rankings[userID] = rankings;
-            await this.setPoll(poll);
-            return poll;
+            if(poll) {
+                poll.rankings[userID] = rankings;
+                await this.setPoll(poll);
+                return poll;
+            }
 
         } catch(e) {
             errorLogger.error(e);
@@ -164,15 +176,17 @@ export default class PollsRepository {
 
     }
 
-    addResults = async(pollID: string, results: Results): Promise<Poll> => {
+    addResults = async(pollID: string, results: Results): Promise<Poll | undefined> => {
         const resultsString = JSON.stringify(results);
         generalLogger.debug(`attempting to add results to pollID: ${pollID}`, resultsString);
 
         try {
             const poll = await this.getPoll(pollID);
-            poll.results = results;
-            await this.setPoll(poll);
-            return poll;
+            if(poll) {
+                poll.results = results;
+                await this.setPoll(poll);
+                return poll;
+            }
 
         } catch(e){
             errorLogger.error(e);

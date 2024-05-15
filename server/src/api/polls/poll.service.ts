@@ -2,7 +2,6 @@ import { createPollID, createUserID, createNominationID } from "../../utils/ids.
 import { 
     CreatePollFields, 
     JoinPollFields, 
-    RejoinPollFields, 
     PollServiceFields,
     AddParticipantFields,
     AddNominationFields,
@@ -74,7 +73,7 @@ export default class PollService {
         try {
             const joinedPoll = await this.pollRepository.getPoll(fields.pollID);
     
-            if(joinedPoll === null) {
+            if(joinedPoll === undefined) {
                 return null;
             }
     
@@ -92,16 +91,7 @@ export default class PollService {
 
     };
 
-    rejoinPoll = async (fields: RejoinPollFields) : Promise<Poll> => {
-        generalLogger.info(`Rejoining poll with ID: ${fields.pollID} for user with ID: ${fields.userID} with name: ${fields.name}`);
-        try {
-            return await this.pollRepository.addParticipant(fields);
-        } catch(e) {
-            throw e;
-        }
-    }
-
-    addParticipant = async(addParticipant: AddParticipantFields): Promise<Poll> => {
+    addParticipant = async(addParticipant: AddParticipantFields): Promise<Poll | undefined> => {
         try {
             return await this.pollRepository.addParticipant(addParticipant);
 
@@ -110,23 +100,25 @@ export default class PollService {
         }
     }
 
-    removeParticipant = async(pollID: string, userID: string): Promise<Poll | void> => {
+    removeParticipant = async(pollID: string, userID: string): Promise<Poll | undefined> => {
         try {
     
             const poll = await this.pollRepository.removeParticipant(pollID, userID);
 
-            if (Object.keys(poll.participants).length === 0) {
-                this.pollRepository.deletePoll(pollID);
+            if(poll) {
+                if (Object.keys(poll.participants).length === 0) {
+                    this.pollRepository.deletePoll(pollID);
+                }
+    
+                return poll;
             }
-
-            return poll;
 
         } catch(e) {
             throw e;
         }
     }
 
-    getPoll = async(pollID: string): Promise<Poll> => {
+    getPoll = async(pollID: string): Promise<Poll | undefined> => {
         try {
             return await this.pollRepository.getPoll(pollID);
 
@@ -135,7 +127,7 @@ export default class PollService {
         }
     }
     
-    addNomination = async({pollID, userID, text}: AddNominationFields): Promise<Poll> => {
+    addNomination = async({pollID, userID, text}: AddNominationFields): Promise<Poll | undefined> => {
         try {
             return this.pollRepository.addNomination({
                 pollID,
@@ -151,7 +143,7 @@ export default class PollService {
         }
     }
 
-    removeNomination = async(pollID: string, nominationID: string): Promise<Poll> => {
+    removeNomination = async(pollID: string, nominationID: string): Promise<Poll | undefined> => {
         try {
             return await this.pollRepository.removeNomination(pollID, nominationID);
 
@@ -160,7 +152,7 @@ export default class PollService {
         }
     }
 
-    startPoll = async (pollID: string): Promise<Poll> => {
+    startPoll = async (pollID: string): Promise<Poll | undefined> => {
         try {
             return await this.pollRepository.startPoll(pollID);
 
@@ -169,28 +161,34 @@ export default class PollService {
         }
     }
 
-    submitRankings = async(rankingsData: SubmitRankingsFields): Promise<Poll> => {
+    submitRankings = async(rankingsData: SubmitRankingsFields): Promise<Poll | undefined> => {
         try {
             const poll = await this.pollRepository.getPoll(rankingsData.pollID);
-    
-            if(!poll.hasStarted) {
-                throw new UnauthorizedException(403, 'Participants cannot rank until the poll has started');
+
+            if(poll) {
+                if(!poll.hasStarted) {
+                    throw new UnauthorizedException(403, 'Participants cannot rank until the poll has started');
+                }
+        
+                return await this.pollRepository.addParticipantRankings(rankingsData);
             }
     
-            return await this.pollRepository.addParticipantRankings(rankingsData);
 
         } catch(e) {
             throw e;
         }
     }
 
-    computeResults = async(pollID: string): Promise<Poll> => {
+    computeResults = async(pollID: string): Promise<Poll | undefined> => {
         try {
             const poll = await this.pollRepository.getPoll(pollID);
+
+            if(poll) {
+                const results = this.getResults(poll.rankings, poll.nominations, poll.votesPerVoter);
+        
+                return this.pollRepository.addResults(pollID, results);
+            }
     
-            const results = this.getResults(poll.rankings, poll.nominations, poll.votesPerVoter);
-    
-            return this.pollRepository.addResults(pollID, results);
 
         } catch(e) {
             throw e;

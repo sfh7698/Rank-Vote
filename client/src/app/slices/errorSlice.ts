@@ -18,7 +18,6 @@ const errorSlice = createSlice({
     initialState: state,
     reducers: {
         setError: (state, action: PayloadAction<errorResponses | string>) => {
-            console.log(action.payload);
             state.error = action.payload;
         }
     },

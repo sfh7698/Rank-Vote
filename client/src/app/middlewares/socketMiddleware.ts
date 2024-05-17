@@ -34,14 +34,14 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
             
             if (userID && !Object.keys(poll.participants).includes(userID)) {
                 dispatch(setError(errorResponses.REMOVED_ERROR));
-                return
+                return;
             }
-            dispatch(setPoll(poll))
+            dispatch(setPoll(poll));
         });
 
         socket.on('error', (error): void => {
-            dispatch(setError(error.message))
-        })
+            dispatch(setError(error.message));
+        });
 
         socket.on('connect_error', (_): void => {
             dispatch(setError(errorResponses.TOKEN_ERROR));
@@ -49,7 +49,7 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
 
         socket.on("poll_cancelled", () => {
             dispatch(setError(errorResponses.CANCELLED_ERROR));
-        })
+        });
 
         const emitEventListener = addListener.withTypes<RootState, AppDispatch>();
 

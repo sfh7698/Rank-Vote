@@ -8,7 +8,8 @@
   "scripts": {
     "build": "npx tsc",
     "docker:compose": "docker-compose up -d",
-    "dev": "concurrently \"npm:docker:compose\" \"wait-on tcp:6379 && nodemon\""
+    "dev:docker": "concurrently \"npm:docker:compose\" \"wait-on tcp:6379 && nodemon\"",
+    "dev:render": "nodemon"
   },
   "author": "Sharjeel Humayun",
   "license": "ISC",

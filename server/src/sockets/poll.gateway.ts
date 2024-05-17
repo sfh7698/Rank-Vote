@@ -71,8 +71,10 @@ class PollHandlers implements ClientToServerEvents {
                 userID,
                 text
             });
-            
-            this.io.to(pollID).emit('poll_updated', updatedPoll);
+
+            if(updatedPoll) {
+                this.io.to(pollID).emit('poll_updated', updatedPoll);
+            }
             
         } catch(e) {
             sendError(this.socket, e);
@@ -89,7 +91,9 @@ class PollHandlers implements ClientToServerEvents {
         try {
             const updatedPoll = await this.pollService.removeNomination(pollID, id);
             
-            this.io.to(pollID).emit("poll_updated", updatedPoll);
+            if(updatedPoll) {
+                this.io.to(pollID).emit("poll_updated", updatedPoll);
+            }
             
         } catch(e) {
             sendError(this.socket, e);
@@ -103,7 +107,10 @@ class PollHandlers implements ClientToServerEvents {
         
         try {
             const updatedPoll = await this.pollService.startPoll(pollID);
-            this.io.to(pollID).emit("poll_updated", updatedPoll);
+
+            if(updatedPoll) {
+                this.io.to(pollID).emit("poll_updated", updatedPoll);
+            }
             
         } catch(e) {
             sendError(this.socket, e);
@@ -123,7 +130,9 @@ class PollHandlers implements ClientToServerEvents {
                 rankings
             });
             
-            this.io.to(pollID).emit("poll_updated", updatedPoll);
+            if(updatedPoll) {
+                this.io.to(pollID).emit("poll_updated", updatedPoll);
+            }
             
         } catch (e) {
             sendError(this.socket, e);
@@ -136,8 +145,9 @@ class PollHandlers implements ClientToServerEvents {
 
         const updatedPoll = await this.pollService.computeResults(pollID);
 
-        this.io.to(pollID).emit('poll_updated', updatedPoll);
-
+        if(updatedPoll) {
+            this.io.to(pollID).emit('poll_updated', updatedPoll);
+        }
     }
 
     cancel_poll = async () => {

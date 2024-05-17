@@ -12,6 +12,4 @@ router.post('/', validate(validateCreatePoll, {keyByField: true}), pollControlle
 
 router.post('/join', validate(validateJoinPoll, {keyByField: true}), pollController.joinPoll);
 
-router.post('/rejoin', authRejoin, pollController.rejoinPoll)
-
 export default router;

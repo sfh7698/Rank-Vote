@@ -34,7 +34,10 @@ const onConnection = async(socket: Socket<ClientToServerEvents, ServerToClientEv
             name
         });
 
-        io.to(roomName).emit('poll_updated', updatedPoll);
+        if(updatedPoll) {
+            io.to(roomName).emit('poll_updated', updatedPoll);
+        }
+
     } catch (e){
         sendError(socket, e);
     }

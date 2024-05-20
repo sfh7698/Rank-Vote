@@ -9,7 +9,7 @@
         "client"
     ],
     "scripts": {
-        "server": "npm run dev:render --workspace=server",
+        "server": "npm run dev:docker --workspace=server",
         "client": "npm run dev --workspace=client",
         "start": "concurrently \"npm run server\" \"npm run client\"",
         "build:shared": "npm run build --workspace=shared",

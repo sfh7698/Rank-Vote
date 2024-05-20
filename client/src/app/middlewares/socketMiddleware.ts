@@ -25,13 +25,13 @@ socketMiddleware.startListening.withTypes<RootState, AppDispatch>()({
         });
 
         socket.on("connect", () => {
-            console.log(`socket with id ${socket.id} connected`);
+            import.meta.env.VITE_NODE_ENV === "dev" && console.log(`socket with id ${socket.id} connected`);
         })
 
         socket.on("poll_updated", (poll) => {
             const token = getState().auth.accessToken;
             const userID = token && getPayloadFromToken(token).subject;
-            
+
             if (userID && !Object.keys(poll.participants).includes(userID)) {
                 dispatch(setError(errorResponses.REMOVED_ERROR));
                 return;

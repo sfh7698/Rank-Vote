@@ -106,7 +106,7 @@ export default class PollService {
             const poll = await this.pollRepository.removeParticipant(pollID, userID);
 
             if(poll) {
-                if (Object.keys(poll.participants).length === 0) {
+                if (Object.keys(poll.participants).length === 0 && poll.hasStarted) {
                     this.pollRepository.deletePoll(pollID);
                 }
     

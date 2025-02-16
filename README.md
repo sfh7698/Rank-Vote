@@ -1,4 +1,5 @@
 # Rank-Vote
+Visit the live version [here](https://rank-vote.onrender.com/)
 PWA realtime voting application to create polls to facilitate ease of decision making amongst a number of people. Can create polls to become admins of the poll and can share poll ID to have people join the poll. Realtime updates provide users the ability to submit nominations and see who is in the poll and what nominations have been submitted for the poll topic. Admin of the polls can remove participants and nominations and directs the different stages of the poll (submissions, voting, and tallying). Allows users to reconnect to the poll if lost connection and poll has not ended.
 
 ## Requirements 
